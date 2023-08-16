@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.dagger.hilt.android")
+    kotlin("kapt")
 }
 
 android {
@@ -71,4 +73,25 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.7.0")
     implementation("androidx.compose.material:material:1.5.0") // Includes BottomNavigation
+
+    val okHttpVersion = "4.10.0"
+    implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
+    implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
+
+    val retrofitVersion = "2.9.0"
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+
+    val coroutinesVersion = "1.6.4"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+
+    val daggerHiltVersion = "2.44"
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    kapt("com.google.dagger:hilt-compiler:$daggerHiltVersion")
+
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
+    implementation("io.coil-kt:coil-compose:2.3.0")
 }

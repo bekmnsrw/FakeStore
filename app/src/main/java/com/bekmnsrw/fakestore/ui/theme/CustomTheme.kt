@@ -18,7 +18,7 @@ fun Theme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colors.bottomAppBarBackground.toArgb()
+            window.statusBarColor = colors.bottomAppBarItemSelected.toArgb()
         }
     }
 
