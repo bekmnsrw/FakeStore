@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.bekmnsrw.fakestore.feature.main.presentation.MainScreen
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
 
 @Composable
@@ -50,7 +51,7 @@ fun NavigationHost(
                 startDestination = NavigationGraph.MainGraph.startDestination,
                 route = NavigationGraph.MainGraph.route
             ) {
-                composable(route = BottomAppBarItem.Main.route) {  }
+                composable(route = BottomAppBarItem.Main.route) { MainScreen(navController = navHostController) }
             }
 
             navigation(

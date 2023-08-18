@@ -3,7 +3,9 @@ package com.bekmnsrw.fakestore.feature.main.domain.dto
 data class ProductMain(
     val id: Long,
     val title: String,
-    val price: Double,
+    val fullPrice: Double,
+    val discountPrice: Double,
     val image: String,
-    val rating: Rating
+    val rate: Double,
+    val count: Long
 )
