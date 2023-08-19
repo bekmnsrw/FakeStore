@@ -13,5 +13,13 @@ val Pink40 = Color(0xFF7D5260)
 internal val baseLightPalette = Colors(
     bottomAppBarBackground = Color(0xFFFFFFFF),
     bottomAppBarItemSelected = Color(0xFF171717),
-    bottomAppBarItemUnselected = Color(0xFF848484)
+    bottomAppBarItemUnselected = Color(0xFF848484),
+    rate = Color(0xFFFF9800),
+    isFavoriteSelected = Color(0xFFF44336),
+    isFavoriteUnselected = Color(0xFF000000),
+    background = Color(0xFFFFFFFF),
+    cardBackground = Color(0xFFFFFFFF),
+    progressBar = Color(0xFF000000),
+    cardMainText = Color(0xFF000000),
+    cardSupportingText = Color(0xFF848484)
 )

@@ -72,31 +72,46 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    // Region Navigation
     implementation("androidx.navigation:navigation-compose:2.7.0")
     implementation("androidx.compose.material:material:1.5.0") // Includes BottomNavigation
+    // End Region
 
+    // Region OkHttp
     val okHttpVersion = "4.10.0"
     implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
+    // End Region
 
+    // Region Retrofit
     val retrofitVersion = "2.9.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    // End Region
 
+    // Region Coroutines
     val coroutinesVersion = "1.6.4"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    // End Region
 
+    // Region Dagger Hilt
     val daggerHiltVersion = "2.44"
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     kapt("com.google.dagger:hilt-compiler:$daggerHiltVersion")
+    // End Region
 
+    // Region Some Extensions
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
     implementation("io.coil-kt:coil-compose:2.3.0")
+    implementation("androidx.compose.material:material-icons-extended:1.5.0")
+    // End Region
 
+    // Region Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx") // Firestore Database
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    // End Region
 }

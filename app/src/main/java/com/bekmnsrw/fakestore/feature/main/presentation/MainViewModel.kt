@@ -10,13 +10,17 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.delayFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,7 +35,8 @@ class MainViewModel @Inject constructor(
 
     @Immutable
     data class MainScreenState(
-        val products: PersistentList<ProductMain> = persistentListOf()
+        val products: PersistentList<ProductMain> = persistentListOf(),
+        val isLoading: Boolean = false
     )
 
     @Immutable
@@ -59,6 +64,20 @@ class MainViewModel @Inject constructor(
     private fun loadProducts() = viewModelScope.launch {
         getAllProductsUseCase()
             .flowOn(Dispatchers.IO)
+            .onStart {
+                _screenState.emit(
+                    _screenState.value.copy(
+                        isLoading = true
+                    )
+                )
+            }
+            .onCompletion {
+                _screenState.emit(
+                    _screenState.value.copy(
+                        isLoading = false
+                    )
+                )
+            }
             .collect {
                 _screenState.emit(
                     _screenState.value.copy(
