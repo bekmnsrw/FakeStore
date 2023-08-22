@@ -4,7 +4,7 @@ data class ProductMain(
     val id: Long,
     val title: String,
     val price: Double,
-    val discountPercentage: Double,
+    val discountPrice: Double,
     val thumbnail: String,
     val rating: Double,
     val stock: Long

@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bekmnsrw.fakestore.feature.main.domain.dto.ProductDetails
+import com.bekmnsrw.fakestore.feature.main.domain.usecase.GetProductByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,10 +22,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
+    private val getProductByIdUseCase: GetProductByIdUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     companion object {
         private const val PRODUCT_ID_KEY = "productId"
+    }
+
+    init {
+        savedStateHandle.get<String>(PRODUCT_ID_KEY)?.let {
+            loadProductById(it.toLong())
+        }
     }
 
     @Immutable
@@ -53,5 +62,31 @@ class DetailsViewModel @Inject constructor(
         when (event) {
             else -> {}
         }
+    }
+
+    private fun loadProductById(id: Long) = viewModelScope.launch {
+        getProductByIdUseCase(id)
+            .flowOn(Dispatchers.IO)
+            .onStart {
+                _screenState.emit(
+                    _screenState.value.copy(
+                        isLoading = true
+                    )
+                )
+            }
+            .onCompletion {
+                _screenState.emit(
+                    _screenState.value.copy(
+                        isLoading = false
+                    )
+                )
+            }
+            .collect {
+                _screenState.emit(
+                    _screenState.value.copy(
+                        productDetails = it
+                    )
+                )
+            }
     }
 }

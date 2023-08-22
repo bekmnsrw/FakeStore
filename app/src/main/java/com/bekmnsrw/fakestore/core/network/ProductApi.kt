@@ -1,7 +1,9 @@
 package com.bekmnsrw.fakestore.core.network
 
+import com.bekmnsrw.fakestore.feature.main.data.response.Product
 import com.bekmnsrw.fakestore.feature.main.data.response.ProductResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ProductApi {
@@ -10,4 +12,9 @@ interface ProductApi {
     suspend fun getAllProducts(
         @Query("limit") limit: Long
     ): ProductResponse
+
+    @GET("products/{id}")
+    suspend fun getProductById(
+        @Path("id") id: Long
+    ): Product
 }

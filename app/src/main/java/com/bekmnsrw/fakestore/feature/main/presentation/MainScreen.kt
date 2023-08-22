@@ -158,7 +158,7 @@ fun ProductListItem(
 
                 ProductPrice(
                     fullPrice = productMain.price,
-                    discountPrice = productMain.discountPercentage
+                    discountPrice = productMain.discountPrice
                 )
             }
         }
@@ -261,7 +261,7 @@ fun ProductPrice(
 
         Text(
             text = when (hasDiscount) {
-                true -> "$fullPrice ₽"
+                true -> "$fullPrice $"
                 false -> ""
             },
             style = CustomTheme.typography.cardDiscountPrice,
@@ -276,8 +276,8 @@ fun ProductPrice(
 
             Text(
                 text = when (hasDiscount) {
-                    true -> "$discountPrice ₽"
-                    false -> "$fullPrice ₽"
+                    true -> "$discountPrice $"
+                    false -> "$fullPrice $"
                 },
                 style = CustomTheme.typography.cardFullPrice,
                 color = CustomTheme.colors.cardMainText
