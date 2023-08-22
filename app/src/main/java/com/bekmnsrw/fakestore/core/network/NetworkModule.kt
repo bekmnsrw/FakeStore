@@ -1,8 +1,5 @@
 package com.bekmnsrw.fakestore.core.network
 
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +16,7 @@ import java.util.concurrent.TimeUnit
 class NetworkModule {
 
     companion object {
-        private const val BASE_URL = "https://fakestore-3417b-default-rtdb.firebaseio.com/"
+        private const val BASE_URL = "https://dummyjson.com/"
     }
 
     @Provides
@@ -51,5 +48,7 @@ class NetworkModule {
         GsonConverterFactory.create()
 
     @Provides
-    fun provideFirebaseFirestore(): FirebaseFirestore = Firebase.firestore
+    fun provideProductApi(
+        retrofit: Retrofit
+    ): ProductApi = retrofit.create(ProductApi::class.java)
 }

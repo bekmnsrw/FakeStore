@@ -2,7 +2,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
-    id("com.google.gms.google-services")
     kotlin("kapt")
 }
 
@@ -107,11 +106,5 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
     implementation("io.coil-kt:coil-compose:2.3.0")
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
-    // End Region
-
-    // Region Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
-    implementation("com.google.firebase:firebase-firestore-ktx") // Firestore Database
-    implementation("com.google.firebase:firebase-analytics-ktx")
     // End Region
 }

@@ -1,10 +1,8 @@
 package com.bekmnsrw.fakestore.feature.main.di
 
+import com.bekmnsrw.fakestore.core.network.ProductApi
 import com.bekmnsrw.fakestore.feature.main.data.ProductRepositoryImpl
 import com.bekmnsrw.fakestore.feature.main.domain.ProductRepository
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -18,11 +16,8 @@ class MainModule {
 
     @Provides
     fun provideProductRepository(
-        firebaseFirestore: FirebaseFirestore
-    ): ProductRepository = ProductRepositoryImpl(firebaseFirestore)
-
-    @Provides
-    fun provideFirebaseFirestore(): FirebaseFirestore = Firebase.firestore
+        productApi: ProductApi
+    ): ProductRepository = ProductRepositoryImpl(productApi)
 }
 
 @Module

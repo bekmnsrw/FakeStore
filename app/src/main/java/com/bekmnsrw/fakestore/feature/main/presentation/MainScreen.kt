@@ -32,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +47,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.bekmnsrw.fakestore.core.navigation.NestedScreen
 import com.bekmnsrw.fakestore.feature.main.domain.dto.ProductMain
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
 
@@ -59,20 +61,25 @@ fun MainScreen(
     val screenAction by viewModel.screenAction.collectAsStateWithLifecycle(initialValue = null)
 
     MainContent(
-        screenState = screenState.value
+        screenState = screenState.value,
+        eventHandler = viewModel::eventHandler
     )
 
     MainActions(
-
+        screenAction = screenAction,
+        navController = navController
     )
 }
 
 @Composable
 fun MainContent(
-    screenState: MainViewModel.MainScreenState
+    screenState: MainViewModel.MainScreenState,
+    eventHandler: (MainViewModel.MainScreenEvent) -> Unit
 ) {
+
     ProductList(
-        screenState = screenState
+        screenState = screenState,
+        eventHandler = eventHandler
     )
 
     CircularProgressBar(
@@ -82,8 +89,10 @@ fun MainContent(
 
 @Composable
 fun ProductList(
-    screenState: MainViewModel.MainScreenState
+    screenState: MainViewModel.MainScreenState,
+    eventHandler: (MainViewModel.MainScreenEvent) -> Unit
 ) {
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(16.dp),
@@ -93,14 +102,16 @@ fun ProductList(
             .fillMaxSize()
             .background(CustomTheme.colors.background)
     ) {
+
         items(
             items = screenState.products,
             key = { it.id }
         ) {
+
             ProductListItem(
                 productMain = it
-            ) {
-
+            ) { productId ->
+                eventHandler(MainViewModel.MainScreenEvent.OnProductClicked(id = productId))
             }
         }
     }
@@ -112,6 +123,7 @@ fun ProductListItem(
     productMain: ProductMain,
     onClick: (Long) -> Unit
 ) {
+
     Card(
         modifier = Modifier.wrapContentSize(),
         shape = RoundedCornerShape(size = 16.dp),
@@ -124,7 +136,7 @@ fun ProductListItem(
         Column {
 
             ProductImage(
-                imageUrl = productMain.image,
+                imageUrl = productMain.thumbnail,
                 isFavorite = false
             )
 
@@ -140,13 +152,13 @@ fun ProductListItem(
                 )
 
                 ProductRating(
-                    rate = productMain.rate,
-                    count = productMain.count
+                    rate = productMain.rating,
+                    count = productMain.stock
                 )
 
                 ProductPrice(
-                    fullPrice = productMain.fullPrice,
-                    discountPrice = productMain.discountPrice
+                    fullPrice = productMain.price,
+                    discountPrice = productMain.discountPercentage
                 )
             }
         }
@@ -317,5 +329,19 @@ fun AddShoppingCartButton() {
 }
 
 @Composable
-fun MainActions() {
+fun MainActions(
+    screenAction: MainViewModel.MainScreenAction?,
+    navController: NavController
+) {
+
+    LaunchedEffect(screenAction) {
+        when (screenAction) {
+            null -> Unit
+            is MainViewModel.MainScreenAction.NavigateProductDetails -> navController.navigate(
+                NestedScreen.ProductDetails.createRoute(
+                    productId = screenAction.id
+                )
+            )
+        }
+    }
 }

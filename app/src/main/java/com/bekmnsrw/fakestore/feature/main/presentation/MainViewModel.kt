@@ -10,14 +10,12 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.delayFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -57,7 +55,7 @@ class MainViewModel @Inject constructor(
 
     fun eventHandler(event: MainScreenEvent) {
         when (event) {
-            is MainScreenEvent.OnProductClicked -> onProductClicked()
+            is MainScreenEvent.OnProductClicked -> onProductClicked(event.id)
         }
     }
 
@@ -87,7 +85,11 @@ class MainViewModel @Inject constructor(
             }
     }
 
-    private fun onProductClicked() {
-        TODO("Not yet implemented")
+    private fun onProductClicked(productId: Long) = viewModelScope.launch {
+        _screenAction.emit(
+            MainScreenAction.NavigateProductDetails(
+                id = productId
+            )
+        )
     }
 }
