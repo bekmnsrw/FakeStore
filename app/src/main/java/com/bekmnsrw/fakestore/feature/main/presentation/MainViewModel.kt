@@ -3,37 +3,28 @@ package com.bekmnsrw.fakestore.feature.main.presentation
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bekmnsrw.fakestore.feature.main.domain.dto.ProductMain
-import com.bekmnsrw.fakestore.feature.main.domain.usecase.GetAllProductsUseCase
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import com.bekmnsrw.fakestore.feature.main.data.ProductPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getAllProductsUseCase: GetAllProductsUseCase
+    private val productPagingSource: ProductPagingSource
 ) : ViewModel() {
 
-    init {
-        loadProducts()
-    }
+    val pagedProducts = Pager(PagingConfig(ProductPagingSource.PAGE_SIZE)) { productPagingSource }.flow
 
     @Immutable
     data class MainScreenState(
-        val products: PersistentList<ProductMain> = persistentListOf(),
         val isLoading: Boolean = false
     )
 
@@ -57,32 +48,6 @@ class MainViewModel @Inject constructor(
         when (event) {
             is MainScreenEvent.OnProductClicked -> onProductClicked(event.id)
         }
-    }
-
-    private fun loadProducts() = viewModelScope.launch {
-        getAllProductsUseCase()
-            .flowOn(Dispatchers.IO)
-            .onStart {
-                _screenState.emit(
-                    _screenState.value.copy(
-                        isLoading = true
-                    )
-                )
-            }
-            .onCompletion {
-                _screenState.emit(
-                    _screenState.value.copy(
-                        isLoading = false
-                    )
-                )
-            }
-            .collect {
-                _screenState.emit(
-                    _screenState.value.copy(
-                        products = it.toPersistentList()
-                    )
-                )
-            }
     }
 
     private fun onProductClicked(productId: Long) = viewModelScope.launch {

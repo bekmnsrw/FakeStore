@@ -6,6 +6,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProductRepository {
 
-    suspend fun getAllProducts(): Flow<List<ProductMain>>
-    suspend fun getProductById(id: Long): Flow<ProductDetails>
+    suspend fun getProductsPaged(
+        limit: Int,
+        skip: Int
+    ): List<ProductMain>
+    suspend fun getProductById(
+        id: Long
+    ): Flow<ProductDetails>
 }

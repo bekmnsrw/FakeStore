@@ -107,4 +107,10 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.3.0")
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
     // End Region
+
+    // Region Paging
+    val pagingVersion = "3.2.0"
+    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
+    implementation("androidx.paging:paging-compose:$pagingVersion")
+    // End Region
 }

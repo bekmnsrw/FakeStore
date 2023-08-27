@@ -14,14 +14,16 @@ class ProductRepositoryImpl @Inject constructor(
     private val productApi: ProductApi
 ) : ProductRepository {
 
-    override suspend fun getAllProducts(): Flow<List<ProductMain>> {
-        return flowOf(
-            productApi
-                .getAllProducts(limit = 10)
-                .products
-                .toProductMainList()
+    override suspend fun getProductsPaged(
+        limit: Int,
+        skip: Int
+    ): List<ProductMain> = productApi
+        .getProductsPaged(
+            limit = limit,
+            skip = skip
         )
-    }
+        .products
+        .toProductMainList()
 
     override suspend fun getProductById(id: Long): Flow<ProductDetails> {
         return flowOf(

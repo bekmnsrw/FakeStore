@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -44,6 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -59,10 +62,12 @@ fun MainScreen(
 
     val screenState = viewModel.screenState.collectAsStateWithLifecycle()
     val screenAction by viewModel.screenAction.collectAsStateWithLifecycle(initialValue = null)
+    val pagedProducts = viewModel.pagedProducts.collectAsLazyPagingItems()
 
     MainContent(
         screenState = screenState.value,
-        eventHandler = viewModel::eventHandler
+        eventHandler = viewModel::eventHandler,
+        pagedProducts = pagedProducts
     )
 
     MainActions(
@@ -74,12 +79,13 @@ fun MainScreen(
 @Composable
 fun MainContent(
     screenState: MainViewModel.MainScreenState,
-    eventHandler: (MainViewModel.MainScreenEvent) -> Unit
+    eventHandler: (MainViewModel.MainScreenEvent) -> Unit,
+    pagedProducts: LazyPagingItems<ProductMain>
 ) {
 
     ProductList(
-        screenState = screenState,
-        eventHandler = eventHandler
+        eventHandler = eventHandler,
+        pagedProducts
     )
 
     CircularProgressBar(
@@ -89,8 +95,8 @@ fun MainContent(
 
 @Composable
 fun ProductList(
-    screenState: MainViewModel.MainScreenState,
-    eventHandler: (MainViewModel.MainScreenEvent) -> Unit
+    eventHandler: (MainViewModel.MainScreenEvent) -> Unit,
+    pagedProducts: LazyPagingItems<ProductMain>
 ) {
 
     LazyVerticalGrid(
@@ -104,14 +110,16 @@ fun ProductList(
     ) {
 
         items(
-            items = screenState.products,
-            key = { it.id }
-        ) {
-
-            ProductListItem(
-                productMain = it
-            ) { productId ->
-                eventHandler(MainViewModel.MainScreenEvent.OnProductClicked(id = productId))
+            count = pagedProducts.itemCount,
+            key = pagedProducts.itemKey { it.id },
+            contentType = pagedProducts.itemContentType { "Products" }
+        ) { index ->
+            pagedProducts[index]?.let { product ->
+                ProductListItem(
+                    productMain = product
+                ) {
+                    eventHandler(MainViewModel.MainScreenEvent.OnProductClicked(product.id))
+                }
             }
         }
     }
@@ -180,9 +188,9 @@ fun ProductImage(
 
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .crossfade(true)
-                .diskCachePolicy(CachePolicy.ENABLED)
+                .data(data = imageUrl)
+                .crossfade(enable = true)
+                .diskCachePolicy(policy = CachePolicy.ENABLED)
                 .build(),
             contentDescription = null,
             contentScale = ContentScale.FillBounds
@@ -250,7 +258,7 @@ fun ProductRating(
 }
 
 @Composable
-fun ProductPrice(
+private fun ProductPrice(
     fullPrice: Double,
     discountPrice: Double
 ) {

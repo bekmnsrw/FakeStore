@@ -9,8 +9,9 @@ import retrofit2.http.Query
 interface ProductApi {
 
     @GET("products")
-    suspend fun getAllProducts(
-        @Query("limit") limit: Long
+    suspend fun getProductsPaged(
+        @Query("limit") limit: Int,
+        @Query("skip") skip: Int
     ): ProductResponse
 
     @GET("products/{id}")
