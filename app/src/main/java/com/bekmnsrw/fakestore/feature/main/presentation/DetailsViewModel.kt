@@ -39,17 +39,19 @@ class DetailsViewModel @Inject constructor(
     @Immutable
     data class DetailsScreenState(
         val productDetails: ProductDetails? = null,
-        val isLoading: Boolean = false
+        val isLoading: Boolean = false,
+        val isFavorite: Boolean = false
     )
 
     @Immutable
     sealed interface DetailsScreenEvent {
-
+        object OnArrowBackClicked : DetailsScreenEvent
+        data class OnFavoriteClicked(val id: Long) : DetailsScreenEvent
     }
 
     @Immutable
     sealed interface DetailsScreenAction {
-
+        object NavigateBack : DetailsScreenAction
     }
 
     private val _screenState = MutableStateFlow(DetailsScreenState())
@@ -60,7 +62,8 @@ class DetailsViewModel @Inject constructor(
 
     fun eventHandler(event: DetailsScreenEvent) {
         when (event) {
-            else -> {}
+            DetailsScreenEvent.OnArrowBackClicked -> onArrowBackClicked()
+            is DetailsScreenEvent.OnFavoriteClicked -> onFavoriteClicked(event.id)
         }
     }
 
@@ -88,5 +91,19 @@ class DetailsViewModel @Inject constructor(
                     )
                 )
             }
+    }
+
+    private fun onArrowBackClicked() = viewModelScope.launch {
+        _screenAction.emit(DetailsScreenAction.NavigateBack)
+    }
+
+    private fun onFavoriteClicked(id: Long) = viewModelScope.launch {
+        // TODO: API Request
+        println("favorite id: $id")
+        _screenState.emit(
+            _screenState.value.copy(
+                isFavorite = !_screenState.value.isFavorite
+            )
+        )
     }
 }
