@@ -21,5 +21,8 @@ internal val baseLightPalette = Colors(
     cardBackground = Color(0xFFFFFFFF),
     progressBar = Color(0xFF000000),
     cardMainText = Color(0xFF000000),
-    cardSupportingText = Color(0xFF848484)
+    cardSupportingText = Color(0xFF848484),
+    inStockIcon = Color(0xFFD7F5DD),
+    boughtIcon = Color(0xFFFFEFCB),
+    onBackground = Color(0xFF000000)
 )

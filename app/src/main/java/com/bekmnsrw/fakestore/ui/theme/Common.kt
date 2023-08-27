@@ -9,21 +9,41 @@ data class Colors(
     val bottomAppBarBackground: Color,
     val bottomAppBarItemSelected: Color,
     val bottomAppBarItemUnselected: Color,
+
     val rate: Color,
+
     val isFavoriteSelected: Color,
     val isFavoriteUnselected: Color,
+
     val background: Color,
-    val cardBackground: Color,
-    val progressBar: Color,
+    val onBackground: Color,
+
     val cardMainText: Color,
-    val cardSupportingText: Color
+    val cardSupportingText: Color,
+    val cardBackground: Color,
+
+    val progressBar: Color,
+
+    val inStockIcon: Color,
+    val boughtIcon: Color
 )
 
 data class CustomTypography(
     val cardTitle: TextStyle,
     val cardRating: TextStyle,
+    val cardFullPrice: TextStyle,
     val cardDiscountPrice: TextStyle,
-    val cardFullPrice: TextStyle
+
+    val detailsTitle: TextStyle,
+    val detailsDescription: TextStyle,
+
+    val detailsCardTitle: TextStyle,
+    val detailsCardSupportingText: TextStyle,
+
+    val detailsFullPrice: TextStyle,
+    val detailsDiscountPrice: TextStyle,
+
+    val detailsListItem: TextStyle
 )
 
 object CustomTheme {

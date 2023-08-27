@@ -3,13 +3,16 @@ package com.bekmnsrw.fakestore.feature.main.presentation
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
@@ -27,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -64,7 +68,7 @@ fun DetailsScreen(
     val screenAction by viewModel.screenAction.collectAsStateWithLifecycle(initialValue = null)
 
     val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+        TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     DetailsContent(
         screenState = screenState.value,
@@ -97,47 +101,50 @@ fun DetailsContent(
             )
         }
     ) { contentPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .background(CustomTheme.colors.background)
                 .padding(contentPadding)
         ) {
 
-            screenState.productDetails?.let {
-                ImagesCarousel(
-                    images = it.images
-                )
+            item {
+                screenState.productDetails?.let {
+                    ImagesCarousel(
+                        images = it.images
+                    )
 
-                ProductTitleDetails(
-                    title = it.title
-                )
+                    ProductTitleDetails(
+                        title = it.title
+                    )
 
-                ProductRatingAndNumberOfOrders(
-                    rating = it.rating,
-                    numberOfComments = it.stock,
-                    numberOfOrders = it.stock
-                )
+                    ProductRatingAndNumberOfOrders(
+                        rating = it.rating,
+                        numberOfComments = it.stock,
+                        numberOfOrders = it.stock
+                    )
 
-                ProductPriceDetails(
-                    fullPrice = it.price,
-                    discountPrice = it.discountPercentage
-                )
+                    ProductPriceDetails(
+                        fullPrice = it.price,
+                        discountPrice = it.discountPercentage
+                    )
 
-                IconWithText(
-                    icon = Icons.Rounded.Done,
-                    backgroundColor = CustomTheme.colors.rate,
-                    text = "Осталось ${it.stock} штук"
-                )
+                    IconWithText(
+                        icon = Icons.Rounded.Done,
+                        backgroundColor = CustomTheme.colors.inStockIcon,
+                        text = "Осталось ${it.stock} штук"
+                    )
 
-                IconWithText(
-                    icon = Icons.Rounded.AddShoppingCart,
-                    backgroundColor = CustomTheme.colors.rate,
-                    text = "${it.stock} человек купили на этой неделе"
-                )
+                    IconWithText(
+                        icon = Icons.Rounded.AddShoppingCart,
+                        backgroundColor = CustomTheme.colors.boughtIcon,
+                        text = "${it.stock} человек купили на этой неделе"
+                    )
 
-                ProductDescription(
-                    description = it.description
-                )
+                    ProductDescription(
+                        description = it.description
+                    )
+                }
             }
         }
     }
@@ -152,20 +159,16 @@ fun ImagesCarousel(
     images: List<String>
 ) {
 
-    Box(
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(data = images[0])
+            .crossfade(enable = true)
+            .diskCachePolicy(policy = CachePolicy.ENABLED)
+            .build(),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
         modifier = Modifier.fillMaxWidth()
-    ) {
-
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(data = images[0])
-                .crossfade(enable = true)
-                .diskCachePolicy(policy = CachePolicy.ENABLED)
-                .build(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
-    }
+    )
 }
 
 @Composable
@@ -174,7 +177,15 @@ fun ProductTitleDetails(
 ) {
 
     Text(
-        text = title
+        text = title,
+        style = CustomTheme.typography.detailsTitle,
+        color = CustomTheme.colors.onBackground,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 16.dp
+            )
     )
 }
 
@@ -187,14 +198,19 @@ fun ProductRatingAndNumberOfOrders(
 ) {
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(intrinsicSize = IntrinsicSize.Max)
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        horizontalArrangement = Arrangement.spacedBy(space = 10.dp)
     ) {
 
         Card(
-            modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .weight(weight = 1f)
+                .fillMaxHeight(),
+            shape = RoundedCornerShape(size = 16.dp),
             colors = CardDefaults.cardColors(
                 containerColor = CustomTheme.colors.background
             ),
@@ -208,15 +224,18 @@ fun ProductRatingAndNumberOfOrders(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
+                    .padding(all = 10.dp)
             ) {
 
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(space = 4.dp)
                 ) {
 
                     Text(
-                        text = "$rating"
+                        text = "$rating",
+                        style = CustomTheme.typography.detailsCardTitle,
+                        color = CustomTheme.colors.onBackground
                     )
 
                     RatingBar(
@@ -225,14 +244,18 @@ fun ProductRatingAndNumberOfOrders(
                 }
 
                 Text(
-                    text = "$numberOfComments отзывов"
+                    text = "$numberOfComments отзывов",
+                    color = CustomTheme.colors.cardSupportingText,
+                    style = CustomTheme.typography.detailsCardSupportingText
                 )
             }
         }
 
         Card(
-            modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .weight(weight = 1f)
+                .fillMaxHeight(),
+            shape = RoundedCornerShape(size = 16.dp),
             colors = CardDefaults.cardColors(
                 containerColor = CustomTheme.colors.background
             ),
@@ -246,15 +269,19 @@ fun ProductRatingAndNumberOfOrders(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
+                    .padding(all = 10.dp)
             ) {
 
                 Text(
-                    text = "$numberOfOrders+"
+                    text = "$numberOfOrders+",
+                    color = CustomTheme.colors.onBackground,
+                    style = CustomTheme.typography.detailsCardTitle
                 )
 
                 Text(
-                    text = "заказов"
+                    text = "заказов",
+                    color = CustomTheme.colors.cardSupportingText,
+                    style = CustomTheme.typography.detailsCardSupportingText
                 )
             }
         }
@@ -304,15 +331,28 @@ fun ProductPriceDetails(
     discountPrice: Double
 ) {
 
-    Row {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 20.dp
+            ),
+        horizontalArrangement = Arrangement.spacedBy(space = 8.dp)
+    ) {
 
         Text(
-            text = "$discountPrice $"
+            text = "$discountPrice $",
+            color = CustomTheme.colors.onBackground,
+            style = CustomTheme.typography.detailsDiscountPrice
         )
 
         Text(
-            text = "$fullPrice $"
-        )
+            text = "$fullPrice $",
+            color = CustomTheme.colors.cardSupportingText,
+            style = CustomTheme.typography.detailsFullPrice,
+
+            )
     }
 }
 
@@ -324,21 +364,31 @@ fun IconWithText(
 ) {
 
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 8.dp
+            ),
+        horizontalArrangement = Arrangement.spacedBy(space = 8.dp)
     ) {
 
         Icon(
             imageVector = icon,
             contentDescription = null,
             modifier = Modifier
-                .size(36.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .size(size = 40.dp)
+                .clip(RoundedCornerShape(size = 8.dp))
                 .background(color = backgroundColor)
-                .padding(4.dp)
+                .padding(all = 8.dp)
         )
 
         Text(
-            text = text
+            text = text,
+            color = CustomTheme.colors.onBackground,
+            style = CustomTheme.typography.detailsListItem
         )
     }
 }
@@ -348,9 +398,38 @@ fun ProductDescription(
     description: String
 ) {
 
-    Text(
-        text = description
-    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 16.dp
+            ),
+        verticalArrangement = Arrangement.spacedBy(space = 8.dp)
+    ) {
+
+        Text(
+            text = "Описание",
+            style = CustomTheme.typography.detailsTitle,
+            color = CustomTheme.colors.onBackground
+        )
+
+        Text(
+            text = description,
+            color = CustomTheme.colors.onBackground,
+            style = CustomTheme.typography.detailsDescription,
+        )
+    }
+}
+
+@Composable
+fun Seller() {
+
+}
+
+@Composable
+fun Category() {
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -360,10 +439,8 @@ fun DetailsScreenTopBar(
     eventHandler: (DetailsViewModel.DetailsScreenEvent) -> Unit,
     isFavorite: Boolean,
     productId: Long
-) = MediumTopAppBar(
-    title = {
-
-    },
+) = SmallTopAppBar(
+    title = {},
     actions = {
         IconButton(
             onClick = { eventHandler(DetailsViewModel.DetailsScreenEvent.OnFavoriteClicked(productId)) }

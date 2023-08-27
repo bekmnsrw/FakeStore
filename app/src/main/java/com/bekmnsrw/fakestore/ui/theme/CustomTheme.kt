@@ -44,13 +44,46 @@ fun typography(): CustomTypography = CustomTypography(
         fontSize = 12.sp,
         fontWeight = FontWeight.Normal
     ),
-    cardDiscountPrice = TextStyle(
+    cardFullPrice = TextStyle(
         fontSize = 12.sp,
         fontWeight = FontWeight.Normal,
         textDecoration = TextDecoration.LineThrough
     ),
-    cardFullPrice = TextStyle(
+    cardDiscountPrice = TextStyle(
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold
+    ),
+
+    detailsTitle = TextStyle(
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold
+    ),
+    detailsDescription = TextStyle(
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Normal
+    ),
+
+    detailsCardTitle = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold
+    ),
+    detailsCardSupportingText = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Normal
+    ),
+
+    detailsDiscountPrice = TextStyle(
+        fontSize = 28.sp,
+        fontWeight = FontWeight.Bold
+    ),
+    detailsFullPrice = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Normal,
+        textDecoration = TextDecoration.LineThrough
+    ),
+
+    detailsListItem = TextStyle(
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Normal
     )
 )

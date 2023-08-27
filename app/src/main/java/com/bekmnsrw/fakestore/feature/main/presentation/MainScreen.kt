@@ -271,7 +271,7 @@ private fun ProductPrice(
                 true -> "$fullPrice $"
                 false -> ""
             },
-            style = CustomTheme.typography.cardDiscountPrice,
+            style = CustomTheme.typography.cardFullPrice,
             color = CustomTheme.colors.cardSupportingText
         )
 
@@ -286,7 +286,7 @@ private fun ProductPrice(
                     true -> "$discountPrice $"
                     false -> "$fullPrice $"
                 },
-                style = CustomTheme.typography.cardFullPrice,
+                style = CustomTheme.typography.cardDiscountPrice,
                 color = CustomTheme.colors.cardMainText
             )
 
