@@ -43,7 +43,10 @@ data class CustomTypography(
     val detailsFullPrice: TextStyle,
     val detailsDiscountPrice: TextStyle,
 
-    val detailsListItem: TextStyle
+    val detailsListItem: TextStyle,
+
+    val sellerRating: TextStyle,
+    val sellerMarks: TextStyle
 )
 
 object CustomTheme {

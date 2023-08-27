@@ -85,5 +85,14 @@ fun typography(): CustomTypography = CustomTypography(
     detailsListItem = TextStyle(
         fontSize = 18.sp,
         fontWeight = FontWeight.Normal
+    ),
+
+    sellerMarks = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Bold
+    ),
+    sellerRating = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal
     )
 )

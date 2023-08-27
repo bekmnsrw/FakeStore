@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -143,6 +145,13 @@ fun DetailsContent(
 
                     ProductDescription(
                         description = it.description
+                    )
+
+                    Seller(
+                        name = it.brand,
+                        image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXgAI0I_2cih4qpbeYgSQWKd2bbjbZUKoG4g&usqp=CAU",
+                        rating = it.rating,
+                        count = it.stock
                     )
                 }
             }
@@ -403,7 +412,7 @@ fun ProductDescription(
             .fillMaxWidth()
             .padding(
                 horizontal = 16.dp,
-                vertical = 16.dp
+                vertical = 20.dp
             ),
         verticalArrangement = Arrangement.spacedBy(space = 8.dp)
     ) {
@@ -422,9 +431,100 @@ fun ProductDescription(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Seller() {
+fun Seller(
+    name: String,
+    image: String,
+    rating: Double,
+    count: Long
+) {
 
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(space = 8.dp)
+    ) {
+
+        Text(
+            text = "Продавец",
+            style = CustomTheme.typography.detailsTitle,
+            color = CustomTheme.colors.onBackground
+        )
+
+        Card(
+            shape = RoundedCornerShape(size = 16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = CustomTheme.colors.background
+            ),
+            border = BorderStroke(
+                width = 1.dp,
+                color = CustomTheme.colors.bottomAppBarItemUnselected
+            ),
+            onClick = {}
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(data = image)
+                        .crossfade(enable = true)
+                        .diskCachePolicy(policy = CachePolicy.ENABLED)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(size = 52.dp)
+                        .clip(RoundedCornerShape(size = 8.dp))
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp)
+                ) {
+
+                    Text(
+                        text = name,
+                        style = CustomTheme.typography.detailsCardTitle,
+                        color = CustomTheme.colors.onBackground
+                    )
+
+                    Row (
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Rounded.Star,
+                            contentDescription = null,
+                            tint = CustomTheme.colors.rate,
+                            modifier = Modifier.offset(x = (-2).dp)
+                        )
+
+                        Text(
+                            text = "$rating",
+                            color = CustomTheme.colors.onBackground,
+                            style = CustomTheme.typography.detailsCardTitle
+                        )
+
+                        Text(
+                            text = "$count оценки",
+                            color = CustomTheme.colors.cardSupportingText,
+                            style = CustomTheme.typography.detailsCardSupportingText,
+                            modifier = Modifier.padding(start = 6.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
