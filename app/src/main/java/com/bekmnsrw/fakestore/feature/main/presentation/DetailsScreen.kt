@@ -16,11 +16,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowForwardIos
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarHalf
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.rounded.AddShoppingCart
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
@@ -48,6 +50,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -152,6 +155,10 @@ fun DetailsContent(
                         image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXgAI0I_2cih4qpbeYgSQWKd2bbjbZUKoG4g&usqp=CAU",
                         rating = it.rating,
                         count = it.stock
+                    )
+
+                    Category(
+                        category = it.category
                     )
                 }
             }
@@ -468,7 +475,7 @@ fun Seller(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(all = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
@@ -527,9 +534,61 @@ fun Seller(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Category() {
+fun Category(
+    category: String
+) {
 
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 20.dp
+            ),
+        shape = RoundedCornerShape(size = 16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CustomTheme.colors.background
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = CustomTheme.colors.bottomAppBarItemUnselected
+        ),
+        onClick = {}
+    ) {
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(all = 16.dp)
+        ) {
+
+            Column {
+
+                Text(
+                    text = category.replaceFirstChar { it.uppercaseChar() },
+                    color = CustomTheme.colors.onBackground,
+                    style = CustomTheme.typography.detailsCardTitle
+                )
+
+                Text(
+                    text = "Категория",
+                    color = CustomTheme.colors.cardSupportingText,
+                    style = CustomTheme.typography.detailsCardSupportingText,
+                )
+            }
+
+            Icon(
+                imageVector = Icons.Outlined.ArrowForwardIos,
+                contentDescription = null,
+                tint = CustomTheme.colors.cardSupportingText,
+                modifier = Modifier.padding(start = 70.dp)
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
