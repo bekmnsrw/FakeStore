@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
@@ -85,12 +86,10 @@ fun MainContent(
 
     ProductList(
         eventHandler = eventHandler,
-        pagedProducts
+        pagedProducts = pagedProducts
     )
 
-    CircularProgressBar(
-        shouldShow = screenState.isLoading
-    )
+    if (pagedProducts.loadState.refresh == LoadState.Loading) CircularProgressBar(shouldShow = true)
 }
 
 @Composable

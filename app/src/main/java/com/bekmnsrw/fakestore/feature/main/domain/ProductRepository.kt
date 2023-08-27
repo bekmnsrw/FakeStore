@@ -10,6 +10,7 @@ interface ProductRepository {
         limit: Int,
         skip: Int
     ): List<ProductMain>
+
     suspend fun getProductById(
         id: Long
     ): Flow<ProductDetails>

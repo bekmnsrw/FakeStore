@@ -1,8 +1,11 @@
 package com.bekmnsrw.fakestore.feature.main.presentation
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,24 +36,29 @@ fun DetailsContent(
     screenState: DetailsViewModel.DetailsScreenState
 ) {
 
-    if (screenState.productDetails != null) {
-        ImagesCarousel(
-            images = screenState.productDetails.images
-        )
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
 
-        ProductTitleDetails(
-            title = screenState.productDetails.title
-        )
+        screenState.productDetails?.let {
+            ImagesCarousel(
+                images = it.images
+            )
 
-        ProductRatingAndNumberOfOrders(
-            rating = screenState.productDetails.rating,
-            numberOfComments = screenState.productDetails.stock,
-            numberOfOrders = screenState.productDetails.stock
-        )
+            ProductTitleDetails(
+                title = it.title
+            )
 
-        ProductPrice(
+            ProductRatingAndNumberOfOrders(
+                rating = it.rating,
+                numberOfComments = it.stock,
+                numberOfOrders = it.stock
+            )
 
-        )
+            ProductPrice(
+
+            )
+        }
     }
 
     CircularProgressBar(
@@ -90,7 +98,6 @@ fun ProductRatingAndNumberOfOrders(
     numberOfComments: Long,
     numberOfOrders: Long
 ) {
-
 
 }
 
