@@ -94,5 +94,22 @@ fun typography(): CustomTypography = CustomTypography(
     sellerRating = TextStyle(
         fontSize = 14.sp,
         fontWeight = FontWeight.Normal
+    ),
+
+    rationaleDialogTitle = TextStyle(
+        fontSize = 20.sp,
+        fontWeight = FontWeight.W400
+    ),
+    rationaleDialogText = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.W400
+    ),
+    rationaleDialogConfirmButton = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.W500
+    ),
+    rationaleDialogDismissButton = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.W500
     )
 )

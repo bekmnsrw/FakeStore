@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import com.bekmnsrw.fakestore.ui.theme.CustomTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -63,12 +65,20 @@ fun RationaleDialog(shouldShow: Boolean) {
         AlertDialog(
             title = {
                 Text(
-                    text = "We need permissions to send you notifications"
+                    text = stringResource(
+                        id = R.string.rationale_dialog_title
+                    ),
+                    style = CustomTheme.typography.rationaleDialogTitle,
+                    color = CustomTheme.colors.onBackground
                 )
             },
             text = {
                 Text(
-                    text = "Are you sure you want to deny this permission?"
+                    text = stringResource(
+                        id = R.string.rationale_dialog_text
+                    ),
+                    style = CustomTheme.typography.rationaleDialogText,
+                    color = CustomTheme.colors.onBackground
                 )
             },
             confirmButton = {
@@ -89,7 +99,11 @@ fun RationaleDialog(shouldShow: Boolean) {
                 ) {
 
                     Text(
-                        text = "Allow"
+                        text = stringResource(
+                            id = R.string.rationale_dialog_confirm_button_text
+                        ),
+                        style = CustomTheme.typography.rationaleDialogConfirmButton,
+                        color = CustomTheme.colors.onBackground
                     )
                 }
             },
@@ -106,7 +120,11 @@ fun RationaleDialog(shouldShow: Boolean) {
                 ) {
 
                     Text(
-                        text = "Don't ask again"
+                        text = stringResource(
+                            id = R.string.rationale_dialog_dismiss_button_text
+                        ),
+                        style = CustomTheme.typography.rationaleDialogDismissButton,
+                        color = CustomTheme.colors.onBackground
                     )
                 }
             },
