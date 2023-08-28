@@ -14,27 +14,27 @@ sealed class BottomAppBarItem(
 ) {
 
     object Main : BottomAppBarItem(
-        route = "main",
+        route = MAIN_SCREEN_ROUTE,
         icon = Icons.Outlined.Home
     )
 
     object Catalog : BottomAppBarItem(
-        route = "catalog",
+        route = CATALOG_SCREEN_ROUTE,
         icon = Icons.Outlined.Search
     )
 
     object Cart : BottomAppBarItem(
-        route = "cart",
+        route = CART_SCREEN_ROUTE,
         icon = Icons.Outlined.ShoppingCart
     )
 
     object Favorites : BottomAppBarItem(
-        route = "favorites",
+        route = FAVORITES_SCREEN_ROUTE,
         icon = Icons.Outlined.FavoriteBorder
     )
 
     object Profile : BottomAppBarItem(
-        route = "profile",
+        route = PROFILE_SCREEN_ROUTE,
         icon = Icons.Outlined.Person
     )
 }

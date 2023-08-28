@@ -48,6 +48,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -55,6 +56,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.bekmnsrw.fakestore.R
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -422,7 +424,7 @@ fun ProductDescription(
     ) {
 
         Text(
-            text = "Описание",
+            text = stringResource(id = R.string.description_title),
             style = CustomTheme.typography.detailsTitle,
             color = CustomTheme.colors.onBackground
         )
@@ -452,7 +454,7 @@ fun Seller(
     ) {
 
         Text(
-            text = "Продавец",
+            text = stringResource(id = R.string.seller_title),
             style = CustomTheme.typography.detailsTitle,
             color = CustomTheme.colors.onBackground
         )
@@ -572,7 +574,7 @@ fun Category(
                 )
 
                 Text(
-                    text = "Категория",
+                    text = stringResource(id = R.string.category_title),
                     color = CustomTheme.colors.cardSupportingText,
                     style = CustomTheme.typography.detailsCardSupportingText,
                 )

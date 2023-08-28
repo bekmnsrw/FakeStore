@@ -8,4 +8,9 @@
     <string name="rationale_dialog_text">Are you sure you want to deny this permission?</string>
     <string name="rationale_dialog_confirm_button_text">Allow</string>
     <string name="rationale_dialog_dismiss_button_text">Don\'t ask again</string>
+
+    <!--  Details Screen  -->
+    <string name="category_title">Категория</string>
+    <string name="seller_title">Продавец</string>
+    <string name="description_title">Описание</string>
 </resources>

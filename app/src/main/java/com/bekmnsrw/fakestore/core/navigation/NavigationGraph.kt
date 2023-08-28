@@ -7,26 +7,26 @@ sealed class NavigationGraph(
 
     object MainGraph : NavigationGraph(
         startDestination = BottomAppBarItem.Main.route,
-        route = "main_graph"
+        route = MAIN_GRAPH_ROUTE
     )
 
     object CatalogGraph : NavigationGraph(
         startDestination = BottomAppBarItem.Catalog.route,
-        route = "catalog_graph"
+        route = CATALOG_GRAPH_ROUTE
     )
 
     object CartGraph : NavigationGraph(
         startDestination = BottomAppBarItem.Cart.route,
-        route = "cart_graph"
+        route = CART_GRAPH_ROUTE
     )
 
     object FavoritesGraph : NavigationGraph(
         startDestination = BottomAppBarItem.Favorites.route,
-        route = "favorites_graph"
+        route = FAVORITES_GRAPH_ROUTE
     )
 
     object ProfileGraph : NavigationGraph(
         startDestination = BottomAppBarItem.Profile.route,
-        route = "profile_graph"
+        route = PROFILE_GRAPH_ROUTE
     )
 }

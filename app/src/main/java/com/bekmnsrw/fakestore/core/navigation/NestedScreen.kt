@@ -5,11 +5,11 @@ sealed class NestedScreen(
 ) {
 
     object ProductDetails : NestedScreen(
-        route = "details/{productId}"
+        route = "$DETAILS_SCREEN_ROUTE/{productId}"
     ) {
 
         fun createRoute(
             productId: Long
-        ): String = "details/$productId"
+        ): String = "$DETAILS_SCREEN_ROUTE/$productId"
     }
 }
