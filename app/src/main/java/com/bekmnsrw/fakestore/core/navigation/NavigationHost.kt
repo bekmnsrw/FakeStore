@@ -1,5 +1,7 @@
 package com.bekmnsrw.fakestore.core.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -16,15 +18,26 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.bekmnsrw.fakestore.PermissionDialog
+import com.bekmnsrw.fakestore.RationaleDialog
+import com.bekmnsrw.fakestore.RequestNotificationPermissionDialog
 import com.bekmnsrw.fakestore.feature.main.presentation.DetailsScreen
 import com.bekmnsrw.fakestore.feature.main.presentation.MainScreen
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 
 @Composable
 fun NavigationHost(
     navHostController: NavHostController = rememberNavController(),
     startDestination: String = NavigationGraph.MainGraph.route
 ) {
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        RequestNotificationPermissionDialog()
+    }
 
     val bottomAppBarItems = listOf(
         BottomAppBarItem.Main,

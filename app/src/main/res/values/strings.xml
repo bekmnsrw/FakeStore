@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FakeStore</string>
+
+    <string name="fcm_notification_channel_id" translatable="false">fcm_channel_id</string>
 </resources>
