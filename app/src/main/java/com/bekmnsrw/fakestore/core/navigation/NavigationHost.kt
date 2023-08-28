@@ -17,7 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.bekmnsrw.fakestore.RequestNotificationPermissionDialog
+import com.bekmnsrw.fakestore.core.permission.RequestNotificationPermissionDialog
 import com.bekmnsrw.fakestore.feature.main.presentation.DetailsScreen
 import com.bekmnsrw.fakestore.feature.main.presentation.MainScreen
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme

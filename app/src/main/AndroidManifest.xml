@@ -27,7 +27,7 @@
         </activity>
 
         <service
-            android:name=".FakeStoreMessagingService"
+            android:name=".core.messaging.FakeStoreMessagingService"
             android:exported="false">
             <intent-filter>
                 <action

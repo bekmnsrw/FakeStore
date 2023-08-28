@@ -1,4 +1,4 @@
-package com.bekmnsrw.fakestore
+package com.bekmnsrw.fakestore.core.database
 
 import android.content.Context
 import androidx.datastore.core.DataStore

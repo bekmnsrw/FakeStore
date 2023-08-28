@@ -1,4 +1,4 @@
-package com.bekmnsrw.fakestore
+package com.bekmnsrw.fakestore.core.permission
 
 import android.Manifest
 import android.content.Intent
@@ -15,6 +15,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import com.bekmnsrw.fakestore.R
+import com.bekmnsrw.fakestore.core.database.DataStoreManager
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
