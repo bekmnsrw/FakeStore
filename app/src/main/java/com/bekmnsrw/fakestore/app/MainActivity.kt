@@ -12,7 +12,6 @@ import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -23,7 +22,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         CoroutineScope(Dispatchers.IO).launch {
-            Log.d("F", Firebase.messaging.token.await())
+            // TODO: Save FCM registration token to backend
+            Log.d("FCM registration token", Firebase.messaging.token.await())
         }
 
         setContent {

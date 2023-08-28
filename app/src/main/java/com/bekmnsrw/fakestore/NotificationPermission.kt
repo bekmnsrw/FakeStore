@@ -1,21 +1,26 @@
 package com.bekmnsrw.fakestore
 
 import android.Manifest
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -25,11 +30,24 @@ fun RequestNotificationPermissionDialog() {
         permission = Manifest.permission.POST_NOTIFICATIONS
     )
 
+    val dataStoreManager = DataStoreManager(LocalContext.current)
+
+    val shouldShow = dataStoreManager.getShouldShow.collectAsState(initial = false).value
+
+    val isKeyStored = dataStoreManager.isKeyStored(
+        booleanPreferencesKey(DataStoreManager.SHOULD_SHOW_RATIONALE_KEY)
+    ).collectAsState(initial = false).value
+
     if (!permissionState.status.isGranted) {
         if (permissionState.status.shouldShowRationale) {
-            RationaleDialog()
+            // Ask user again to grant permissions
+            when {
+                !isKeyStored -> RationaleDialog(shouldShow = true)
+                shouldShow != null -> RationaleDialog(shouldShow = shouldShow)
+            }
         } else {
-            LaunchedEffect(!permissionState.status.shouldShowRationale) {
+            // Request permissions for the first time
+            LaunchedEffect(Unit) {
                 permissionState.launchPermissionRequest()
             }
         }
@@ -37,70 +55,68 @@ fun RequestNotificationPermissionDialog() {
 }
 
 @Composable
-fun PermissionDialog(
-    onRequestPermission: () -> Unit
-) {
+fun RationaleDialog(shouldShow: Boolean) {
+    val context = LocalContext.current
+    val dataStoreManager = DataStoreManager(context)
 
-    var showWarningDialog by remember { mutableStateOf(true) }
-
-    if (showWarningDialog) {
+    if (shouldShow) {
         AlertDialog(
             title = {
-                Text(text = "Title")
+                Text(
+                    text = "We need permissions to send you notifications"
+                )
             },
             text = {
                 Text(
-                    text = "Text"
+                    text = "Are you sure you want to deny this permission?"
                 )
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onRequestPermission()
-                        showWarningDialog = false
+                        // Intent to App Settings
+                        context.startActivity(
+                            Intent(
+                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.fromParts("package", context.packageName, null)
+                            ).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                                addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+                            }
+                        )
                     }
                 ) {
 
                     Text(
-                        text = "Request"
+                        text = "Allow"
                     )
                 }
             },
-            onDismissRequest = {}
-        )
-    }
-}
-
-@Composable
-fun RationaleDialog() {
-
-    var showWarningDialog by remember { mutableStateOf(true) }
-
-    if (showWarningDialog) {
-        AlertDialog(
-            title = {
-                Text(
-                    text = ""
-                )
-            },
-            text = {
-                Text(
-                    text = ""
-                )
-            },
-            confirmButton = {
+            dismissButton = {
                 TextButton(
+                    // Remember that user don't want to see this dialog again
                     onClick = {
-                        showWarningDialog = false
+                        CoroutineScope(Dispatchers.IO).launch {
+                            dataStoreManager.saveShouldShow(
+                                shouldShow = false
+                            )
+                        }
                     }
                 ) {
 
                     Text(
-                        text = ""
+                        text = "Don't ask again"
                     )
                 }
             },
-            onDismissRequest = { showWarningDialog = false }
+            onDismissRequest = {
+                CoroutineScope(Dispatchers.IO).launch {
+                    dataStoreManager.saveShouldShow(
+                        shouldShow = true
+                    )
+                }
+            }
         )
     }
 }

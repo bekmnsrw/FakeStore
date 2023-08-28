@@ -124,4 +124,8 @@ dependencies {
     // Region Accompanist Permission Library
     implementation("com.google.accompanist:accompanist-permissions:0.30.1")
     // End Region
+
+    // Region DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    // End Region
 }
