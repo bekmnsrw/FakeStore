@@ -30,12 +30,6 @@ class DetailsViewModel @Inject constructor(
         private const val PRODUCT_ID_KEY = "productId"
     }
 
-    init {
-        savedStateHandle.get<String>(PRODUCT_ID_KEY)?.let {
-            loadProductById(it.toLong())
-        }
-    }
-
     @Immutable
     data class DetailsScreenState(
         val productDetails: ProductDetails? = null,
@@ -64,6 +58,12 @@ class DetailsViewModel @Inject constructor(
         when (event) {
             DetailsScreenEvent.OnArrowBackClicked -> onArrowBackClicked()
             is DetailsScreenEvent.OnFavoriteClicked -> onFavoriteClicked(event.id)
+        }
+    }
+
+    init {
+        savedStateHandle.get<String>(PRODUCT_ID_KEY)?.let {
+            loadProductById(it.toLong())
         }
     }
 

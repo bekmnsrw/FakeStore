@@ -111,5 +111,10 @@ fun typography(): CustomTypography = CustomTypography(
     rationaleDialogDismissButton = TextStyle(
         fontSize = 14.sp,
         fontWeight = FontWeight.W500
+    ),
+
+    categoryCard = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Bold
     )
 )

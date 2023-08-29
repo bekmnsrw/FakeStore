@@ -51,7 +51,9 @@ data class CustomTypography(
     val rationaleDialogTitle: TextStyle,
     val rationaleDialogText: TextStyle,
     val rationaleDialogConfirmButton: TextStyle,
-    val rationaleDialogDismissButton: TextStyle
+    val rationaleDialogDismissButton: TextStyle,
+
+    val categoryCard: TextStyle
 )
 
 object CustomTheme {

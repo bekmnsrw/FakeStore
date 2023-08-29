@@ -9,6 +9,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -20,6 +22,7 @@ import androidx.navigation.navigation
 import com.bekmnsrw.fakestore.core.permission.RequestNotificationPermissionDialog
 import com.bekmnsrw.fakestore.feature.main.presentation.details.DetailsScreen
 import com.bekmnsrw.fakestore.feature.main.presentation.list.MainScreen
+import com.bekmnsrw.fakestore.feature.search.presentation.CategoryScreen
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
 
 @Composable
@@ -39,6 +42,10 @@ fun NavigationHost(
         BottomAppBarItem.Favorites,
         BottomAppBarItem.Profile
     )
+
+    val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
+        "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+    }
 
     Scaffold(
         bottomBar = {
@@ -66,28 +73,33 @@ fun NavigationHost(
                 startDestination = NavigationGraph.CatalogGraph.startDestination,
                 route = NavigationGraph.CatalogGraph.route
             ) {
-                composable(route = BottomAppBarItem.Catalog.route) {  }
+                composable(route = BottomAppBarItem.Catalog.route) {
+                    CategoryScreen(
+                        navController = navHostController,
+                        viewModel = viewModel(viewModelStoreOwner)
+                    )
+                }
             }
 
             navigation(
                 startDestination = NavigationGraph.CartGraph.startDestination,
                 route = NavigationGraph.CartGraph.route
             ) {
-                composable(route = BottomAppBarItem.Cart.route) {  }
+                composable(route = BottomAppBarItem.Cart.route) { }
             }
 
             navigation(
                 startDestination = NavigationGraph.FavoritesGraph.startDestination,
                 route = NavigationGraph.FavoritesGraph.route
             ) {
-                composable(route = BottomAppBarItem.Favorites.route) {  }
+                composable(route = BottomAppBarItem.Favorites.route) { }
             }
 
             navigation(
                 startDestination = NavigationGraph.ProfileGraph.startDestination,
                 route = NavigationGraph.ProfileGraph.route
             ) {
-                composable(route = BottomAppBarItem.Profile.route) {  }
+                composable(route = BottomAppBarItem.Profile.route) { }
             }
         }
     }
@@ -132,7 +144,9 @@ fun CustomBottomAppBar(
                 selected = isSelected,
                 onClick = {
                     navHostController.navigate(item.route) {
-                        popUpTo(navHostController.graph.findStartDestination().id) { saveState = true }
+                        popUpTo(navHostController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
                         launchSingleTop = true
                         restoreState = true
                     }

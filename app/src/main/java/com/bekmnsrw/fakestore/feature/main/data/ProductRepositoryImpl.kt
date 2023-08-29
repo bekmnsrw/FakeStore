@@ -7,7 +7,7 @@ import com.bekmnsrw.fakestore.feature.main.domain.ProductRepository
 import com.bekmnsrw.fakestore.feature.main.domain.dto.ProductDetails
 import com.bekmnsrw.fakestore.feature.main.domain.dto.ProductMain
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(
@@ -25,8 +25,10 @@ class ProductRepositoryImpl @Inject constructor(
         .products
         .toProductMainList()
 
-    override suspend fun getProductById(id: Long): Flow<ProductDetails> {
-        return flowOf(
+    override suspend fun getProductById(
+        id: Long
+    ): Flow<ProductDetails> = flow {
+        emit(
             productApi
                 .getProductById(id)
                 .toProductDetails()

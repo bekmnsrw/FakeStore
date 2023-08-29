@@ -18,4 +18,7 @@ interface ProductApi {
     suspend fun getProductById(
         @Path("id") id: Long
     ): Product
+
+    @GET("products/categories")
+    suspend fun getAllCategories(): List<String>
 }
