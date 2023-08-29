@@ -308,13 +308,11 @@ fun RatingBar(
     rating: Double
 ) {
 
-    val filledStars = floor(rating).toInt()
-    val unfilledStars = (5 - ceil(rating)).toInt()
-    val halfStars = !(rating.rem(1).equals(0.0))
+    val numberOfStars = calculateNumberOfStars(rating)
 
     Row {
 
-        repeat(filledStars) {
+        repeat(numberOfStars.first) {
             Icon(
                 imageVector = Icons.Outlined.Star,
                 contentDescription = null,
@@ -322,7 +320,7 @@ fun RatingBar(
             )
         }
 
-        if (halfStars) {
+        if (numberOfStars.third) {
             Icon(
                 imageVector = Icons.Outlined.StarHalf,
                 contentDescription = null,
@@ -330,7 +328,7 @@ fun RatingBar(
             )
         }
 
-        repeat(unfilledStars) {
+        repeat(numberOfStars.second) {
             Icon(
                 imageVector = Icons.Outlined.StarOutline,
                 contentDescription = null,
@@ -643,4 +641,23 @@ fun DetailsActions(
             DetailsViewModel.DetailsScreenAction.NavigateBack -> navController.navigateUp()
         }
     }
+}
+
+fun calculateNumberOfStars(rating: Double): Triple<Int, Int, Boolean> {
+    val splitRating = rating.toString().split(".")
+    var numberBeforeDot = splitRating[0].toInt()
+    val numberAfterDot = ("0." + splitRating[1]).toDouble()
+
+    if (numberAfterDot > 0.79) numberBeforeDot++
+
+    val hasHalfStar = when(numberAfterDot) {
+        in 0.40..0.79 -> true
+        else -> false
+    }
+
+    return Triple(
+        first = numberBeforeDot,
+        second = if (hasHalfStar) 4 - numberBeforeDot else 5 - numberBeforeDot,
+        third = hasHalfStar
+    )
 }
