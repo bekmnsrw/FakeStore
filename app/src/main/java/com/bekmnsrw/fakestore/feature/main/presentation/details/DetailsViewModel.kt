@@ -1,4 +1,4 @@
-package com.bekmnsrw.fakestore.feature.main.presentation
+package com.bekmnsrw.fakestore.feature.main.presentation.details
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle

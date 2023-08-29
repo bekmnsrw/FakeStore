@@ -1,4 +1,4 @@
-package com.bekmnsrw.fakestore.feature.main.presentation
+package com.bekmnsrw.fakestore.feature.main.presentation.details
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -57,9 +57,8 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.bekmnsrw.fakestore.R
+import com.bekmnsrw.fakestore.feature.main.presentation.list.CircularProgressBar
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
-import kotlin.math.ceil
-import kotlin.math.floor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,10 +1,11 @@
-package com.bekmnsrw.fakestore.feature.main.presentation
+package com.bekmnsrw.fakestore.feature.main.presentation.list
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import com.bekmnsrw.fakestore.feature.main.data.ProductPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +22,9 @@ class MainViewModel @Inject constructor(
     private val productPagingSource: ProductPagingSource
 ) : ViewModel() {
 
-    val pagedProducts = Pager(PagingConfig(ProductPagingSource.PAGE_SIZE)) { productPagingSource }.flow
+    val pagedProducts = Pager(PagingConfig(ProductPagingSource.PAGE_SIZE)) {
+        productPagingSource
+    }.flow.cachedIn(viewModelScope)
 
     @Immutable
     data class MainScreenState(

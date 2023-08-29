@@ -1,4 +1,4 @@
-package com.bekmnsrw.fakestore.feature.main.presentation
+package com.bekmnsrw.fakestore.feature.main.presentation.list
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
