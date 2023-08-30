@@ -21,4 +21,11 @@ interface ProductApi {
 
     @GET("products/categories")
     suspend fun getAllCategories(): List<String>
+
+    @GET("products/category/{category}")
+    suspend fun getProductsOfCategory(
+        @Path("category") category: String,
+        @Query("limit") limit: Int,
+        @Query("skip") skip: Int
+    ): ProductResponse
 }

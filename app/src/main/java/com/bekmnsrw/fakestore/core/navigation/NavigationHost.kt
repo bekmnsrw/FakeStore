@@ -23,6 +23,7 @@ import com.bekmnsrw.fakestore.core.permission.RequestNotificationPermissionDialo
 import com.bekmnsrw.fakestore.feature.main.presentation.details.DetailsScreen
 import com.bekmnsrw.fakestore.feature.main.presentation.list.MainScreen
 import com.bekmnsrw.fakestore.feature.search.presentation.CategoryScreen
+import com.bekmnsrw.fakestore.feature.search.presentation.ProductsOfCategoryScreen
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
 
 @Composable
@@ -65,8 +66,13 @@ fun NavigationHost(
                 startDestination = NavigationGraph.MainGraph.startDestination,
                 route = NavigationGraph.MainGraph.route
             ) {
-                composable(route = BottomAppBarItem.Main.route) { MainScreen(navController = navHostController) }
-                composable(route = NestedScreen.ProductDetails.route) { DetailsScreen(navController = navHostController) }
+                composable(route = BottomAppBarItem.Main.route) {
+                    MainScreen(navController = navHostController)
+                }
+
+                composable(route = NestedScreen.ProductDetails.route) {
+                    DetailsScreen(navController = navHostController)
+                }
             }
 
             navigation(
@@ -78,6 +84,14 @@ fun NavigationHost(
                         navController = navHostController,
                         viewModel = viewModel(viewModelStoreOwner)
                     )
+                }
+
+                composable(route = NestedScreen.ProductsOfCategoryList.route) {
+                    ProductsOfCategoryScreen(navController = navHostController)
+                }
+
+                composable(route = NestedScreen.ProductDetails.reusableRoute) {
+                    DetailsScreen(navController = navHostController)
                 }
             }
 
@@ -131,6 +145,7 @@ fun CustomBottomAppBar(
         }?.parent?.route
 
         bottomAppBarItems.forEach { item ->
+            println("${item.route} : $currentGraphRoute")
             val isSelected = when {
                 item.route == BottomAppBarItem.Main.route && currentGraphRoute == NavigationGraph.MainGraph.route -> true
                 item.route == BottomAppBarItem.Catalog.route && currentGraphRoute == NavigationGraph.CatalogGraph.route -> true

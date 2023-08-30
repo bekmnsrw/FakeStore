@@ -33,10 +33,14 @@ class CategoryViewModel @Inject constructor(
     )
 
     @Immutable
-    sealed interface CategoryScreenEvent {}
+    sealed interface CategoryScreenEvent {
+        data class OnCategoryClicked(val category: String) : CategoryScreenEvent
+    }
 
     @Immutable
-    sealed interface CategoryScreenAction {}
+    sealed interface CategoryScreenAction {
+        data class NavigateProductsOfCategoryList(val category: String) : CategoryScreenAction
+    }
 
     private val _screenState = MutableStateFlow(CategoryScreenState())
     val screenState: StateFlow<CategoryScreenState> = _screenState.asStateFlow()
@@ -46,7 +50,7 @@ class CategoryViewModel @Inject constructor(
 
     fun eventHandler(event: CategoryScreenEvent) {
         when (event) {
-            else -> {}
+            is CategoryScreenEvent.OnCategoryClicked -> onCategoryClicked(event.category)
         }
     }
 
@@ -78,5 +82,13 @@ class CategoryViewModel @Inject constructor(
                     )
                 )
             }
+    }
+
+    private fun onCategoryClicked(category: String) = viewModelScope.launch {
+        _screenAction.emit(
+            CategoryScreenAction.NavigateProductsOfCategoryList(
+                category = category
+            )
+        )
     }
 }

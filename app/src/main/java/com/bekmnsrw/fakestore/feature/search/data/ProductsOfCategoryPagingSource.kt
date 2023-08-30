@@ -1,13 +1,13 @@
-package com.bekmnsrw.fakestore.feature.main.data
+package com.bekmnsrw.fakestore.feature.search.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.bekmnsrw.fakestore.feature.main.domain.ProductRepository
 import com.bekmnsrw.fakestore.feature.main.domain.dto.ProductMain
-import javax.inject.Inject
+import com.bekmnsrw.fakestore.feature.search.domain.CategoryRepository
 
-class ProductPagingSource @Inject constructor(
-    private val productRepository: ProductRepository
+class ProductsOfCategoryPagingSource(
+    private val categoryRepository: CategoryRepository,
+    private val category: String
 ) : PagingSource<Int, ProductMain>() {
 
     companion object {
@@ -26,7 +26,8 @@ class ProductPagingSource @Inject constructor(
         val position = params.key ?: INITIAL_LOAD_SIZE
         val offset = if (params.key != null) position * PAGE_SIZE else INITIAL_LOAD_SIZE
 
-        val response = productRepository.getProductsPaged(
+        val response = categoryRepository.getProductsOfCategory(
+            category = category,
             limit = params.loadSize,
             skip = offset
         )

@@ -16,18 +16,21 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.bekmnsrw.fakestore.core.database.URLS
+import com.bekmnsrw.fakestore.core.navigation.NestedScreen
 import com.bekmnsrw.fakestore.feature.main.presentation.list.CircularProgressBar
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
 
@@ -45,7 +48,10 @@ fun CategoryScreen(
         eventHandler = viewModel::eventHandler
     )
 
-    CategoryActions()
+    CategoryActions(
+        navController = navController,
+        screenAction = screenAction
+    )
 }
 
 @Composable
@@ -55,7 +61,8 @@ fun CategoryContent(
 ) {
 
     CategoryList(
-        categories = screenState.categories
+        categories = screenState.categories,
+        eventHandler = eventHandler
     )
 
     CircularProgressBar(
@@ -65,7 +72,8 @@ fun CategoryContent(
 
 @Composable
 fun CategoryList(
-    categories: List<String>
+    categories: List<String>,
+    eventHandler: (CategoryViewModel.CategoryScreenEvent) -> Unit
 ) {
 
     LazyVerticalGrid(
@@ -81,11 +89,13 @@ fun CategoryList(
         items(
             items = categories,
             key = { it }
-        ) {
+        ) { category ->
 
             CategoryListItem(
-                category = it
-            )
+                category = category
+            ) {
+                eventHandler(CategoryViewModel.CategoryScreenEvent.OnCategoryClicked(it))
+            }
         }
     }
 }
@@ -93,13 +103,14 @@ fun CategoryList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryListItem(
-    category: String
+    category: String,
+    onClick: (String) -> Unit
 ) {
 
     Card(
         modifier = Modifier.wrapContentSize(),
         shape = RoundedCornerShape(size = 16.dp),
-        onClick = {}
+        onClick = { onClick(category) }
     ) {
 
         Box(
@@ -135,4 +146,19 @@ fun CategoryListItem(
 }
 
 @Composable
-fun CategoryActions() {}
+fun CategoryActions(
+    navController: NavController,
+    screenAction: CategoryViewModel.CategoryScreenAction?
+) {
+
+    LaunchedEffect(screenAction) {
+        when (screenAction) {
+            null -> Unit
+            is CategoryViewModel.CategoryScreenAction.NavigateProductsOfCategoryList -> navController.navigate(
+                NestedScreen.ProductsOfCategoryList.createRoute(
+                    category = screenAction.category
+                )
+            )
+        }
+    }
+}

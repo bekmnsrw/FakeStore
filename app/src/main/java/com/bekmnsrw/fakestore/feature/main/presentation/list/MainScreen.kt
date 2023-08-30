@@ -66,7 +66,6 @@ fun MainScreen(
     val pagedProducts = viewModel.pagedProducts.collectAsLazyPagingItems()
 
     MainContent(
-        screenState = screenState.value,
         eventHandler = viewModel::eventHandler,
         pagedProducts = pagedProducts
     )
@@ -79,12 +78,11 @@ fun MainScreen(
 
 @Composable
 fun MainContent(
-    screenState: MainViewModel.MainScreenState,
     eventHandler: (MainViewModel.MainScreenEvent) -> Unit,
     pagedProducts: LazyPagingItems<ProductMain>
 ) {
 
-    ProductList(
+    ProductMainList(
         eventHandler = eventHandler,
         pagedProducts = pagedProducts
     )
@@ -93,7 +91,7 @@ fun MainContent(
 }
 
 @Composable
-fun ProductList(
+fun ProductMainList(
     eventHandler: (MainViewModel.MainScreenEvent) -> Unit,
     pagedProducts: LazyPagingItems<ProductMain>
 ) {
@@ -117,7 +115,9 @@ fun ProductList(
                 ProductListItem(
                     productMain = product
                 ) {
-                    eventHandler(MainViewModel.MainScreenEvent.OnProductClicked(product.id))
+                    eventHandler(
+                        MainViewModel.MainScreenEvent.OnProductClicked(product.id)
+                    )
                 }
             }
         }
@@ -345,7 +345,7 @@ fun MainActions(
         when (screenAction) {
             null -> Unit
             is MainViewModel.MainScreenAction.NavigateProductDetails -> navController.navigate(
-                NestedScreen.ProductDetails.createRoute(
+                NestedScreen.ProductDetails.navigateFromMainScreen(
                     productId = screenAction.id
                 )
             )

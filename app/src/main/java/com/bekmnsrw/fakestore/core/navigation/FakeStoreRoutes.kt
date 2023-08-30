@@ -13,3 +13,6 @@ const val FAVORITES_GRAPH_ROUTE = "favorites_graph"
 const val PROFILE_GRAPH_ROUTE = "profile_graph"
 
 const val DETAILS_SCREEN_ROUTE = "details"
+const val DETAILS_SCREEN_REUSABLE_ROUTE = "category_details"
+
+const val PRODUCTS_OF_CATEGORY_ROUTE = "category"
