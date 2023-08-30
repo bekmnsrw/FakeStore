@@ -1,6 +1,6 @@
 package com.bekmnsrw.fakestore.core.database
 
-val URLS = mapOf(
+val CATEGORY_MOCK_DATA = mapOf(
     "smartphones" to Pair("Смартфоны", "https://avatars.mds.yandex.net/get-mpic/7981123/img_id257572429354721379.jpeg/orig"),
     "laptops" to Pair("Ноутбуки", "https://avatars.mds.yandex.net/get-mpic/5236304/img_id5514705596026165558.jpeg/orig"),
     "fragrances" to Pair("Парфюмерия", "https://avatars.mds.yandex.net/get-mpic/5236304/img_id5514705596026165558.jpeg/orig"),

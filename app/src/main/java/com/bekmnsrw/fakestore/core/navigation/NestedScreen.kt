@@ -6,17 +6,17 @@ sealed class NestedScreen(
 ) {
 
     object ProductDetails : NestedScreen(
-        route = "$DETAILS_SCREEN_ROUTE/{productId}",
-        reusableRoute = "$DETAILS_SCREEN_REUSABLE_ROUTE/{productId}"
+        route = "$DETAILS_SCREEN_ROUTE_FROM_MAIN_SCREEN/{productId}",
+        reusableRoute = "$DETAILS_SCREEN_ROUTE_FROM_PRODUCTS_OF_CATEGORY_SCREEN/{productId}"
     ) {
 
         fun navigateFromMainScreen(
             productId: Long
-        ): String = "$DETAILS_SCREEN_ROUTE/$productId"
+        ): String = "$DETAILS_SCREEN_ROUTE_FROM_MAIN_SCREEN/$productId"
 
         fun navigateFromProductsOfCategoryScreen(
             productId: Long
-        ): String = "$DETAILS_SCREEN_REUSABLE_ROUTE/$productId"
+        ): String = "$DETAILS_SCREEN_ROUTE_FROM_PRODUCTS_OF_CATEGORY_SCREEN/$productId"
     }
 
     object ProductsOfCategoryList : NestedScreen(

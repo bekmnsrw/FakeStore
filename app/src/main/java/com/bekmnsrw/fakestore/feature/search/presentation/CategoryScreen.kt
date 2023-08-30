@@ -23,13 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.bekmnsrw.fakestore.core.database.URLS
+import com.bekmnsrw.fakestore.core.database.CATEGORY_MOCK_DATA
 import com.bekmnsrw.fakestore.core.navigation.NestedScreen
 import com.bekmnsrw.fakestore.feature.main.presentation.list.CircularProgressBar
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
@@ -119,7 +118,7 @@ fun CategoryListItem(
 
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(data = URLS[category]?.second)
+                    .data(data = CATEGORY_MOCK_DATA[category]?.second)
                     .crossfade(enable = true)
                     .diskCachePolicy(policy = CachePolicy.ENABLED)
                     .build(),
@@ -129,7 +128,7 @@ fun CategoryListItem(
             )
 
             Text(
-                text = URLS[category]?.first.toString(),
+                text = CATEGORY_MOCK_DATA[category]?.first.toString(),
                 style = CustomTheme.typography.categoryCard,
                 color = CustomTheme.colors.onBackground,
                 modifier = Modifier

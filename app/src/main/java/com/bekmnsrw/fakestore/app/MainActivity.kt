@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.CompositionLocalProvider
-import com.bekmnsrw.fakestore.core.navigation.NavigationHost
+import com.bekmnsrw.fakestore.core.navigation.NavHost
 import com.bekmnsrw.fakestore.ui.theme.Theme
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Theme {
                 CompositionLocalProvider {
-                    NavigationHost()
+                    NavHost()
                 }
             }
         }
