@@ -70,8 +70,9 @@ fun DetailsScreen(
     val screenState = viewModel.screenState.collectAsStateWithLifecycle()
     val screenAction by viewModel.screenAction.collectAsStateWithLifecycle(initialValue = null)
 
-    val scrollBehavior =
-        TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
+        rememberTopAppBarState()
+    )
 
     DetailsContent(
         screenState = screenState.value,

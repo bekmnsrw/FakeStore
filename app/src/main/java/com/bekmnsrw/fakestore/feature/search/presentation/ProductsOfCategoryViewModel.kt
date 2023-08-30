@@ -42,11 +42,13 @@ class ProductsOfCategoryViewModel @Inject constructor(
     @Immutable
     sealed interface ProductsOfCategoryScreenEvent {
         data class OnProductClicked(val id: Long) : ProductsOfCategoryScreenEvent
+        object OnArrowBackClicked : ProductsOfCategoryScreenEvent
     }
 
     @Immutable
     sealed interface ProductsOfCategoryScreenAction {
         data class NavigateProductDetails(val id: Long) : ProductsOfCategoryScreenAction
+        object NavigateBack : ProductsOfCategoryScreenAction
     }
 
     private val _screenState = MutableStateFlow(ProductsOfCategoryScreenState())
@@ -58,12 +60,19 @@ class ProductsOfCategoryViewModel @Inject constructor(
     fun eventHandler(event: ProductsOfCategoryScreenEvent) {
         when (event) {
             is ProductsOfCategoryScreenEvent.OnProductClicked -> onProductClicked(event.id)
+            ProductsOfCategoryScreenEvent.OnArrowBackClicked -> onArrowBackClicked()
         }
     }
 
     private fun onProductClicked(productId: Long) = viewModelScope.launch {
         _screenAction.emit(
             ProductsOfCategoryScreenAction.NavigateProductDetails(id = productId)
+        )
+    }
+
+    private fun onArrowBackClicked() = viewModelScope.launch {
+        _screenAction.emit(
+            ProductsOfCategoryScreenAction.NavigateBack
         )
     }
 }
