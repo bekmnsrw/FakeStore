@@ -28,7 +28,7 @@ import com.bekmnsrw.fakestore.ui.theme.CustomTheme
 @Composable
 fun ProductsOfCategoryScreen(
     navController: NavController,
-    viewModel: ProductsOfCategoryListViewModel = hiltViewModel()
+    viewModel: ProductsOfCategoryViewModel = hiltViewModel()
 ) {
 
     val screenState = viewModel.screenState.collectAsStateWithLifecycle()
@@ -48,7 +48,7 @@ fun ProductsOfCategoryScreen(
 
 @Composable
 fun ProductsOfCategoryContent(
-    eventHandler: (ProductsOfCategoryListViewModel.ProductsOfCategoryScreenEvent) -> Unit,
+    eventHandler: (ProductsOfCategoryViewModel.ProductsOfCategoryScreenEvent) -> Unit,
     pagedProducts: LazyPagingItems<ProductMain>
 ) {
 
@@ -62,7 +62,7 @@ fun ProductsOfCategoryContent(
 
 @Composable
 fun ProductsOfCategoryList(
-    eventHandler: (ProductsOfCategoryListViewModel.ProductsOfCategoryScreenEvent) -> Unit,
+    eventHandler: (ProductsOfCategoryViewModel.ProductsOfCategoryScreenEvent) -> Unit,
     pagedProducts: LazyPagingItems<ProductMain>
 ) {
 
@@ -86,7 +86,7 @@ fun ProductsOfCategoryList(
                     productMain = product
                 ) {
                     eventHandler(
-                        ProductsOfCategoryListViewModel.ProductsOfCategoryScreenEvent.OnProductClicked(it)
+                        ProductsOfCategoryViewModel.ProductsOfCategoryScreenEvent.OnProductClicked(it)
                     )
                 }
             }
@@ -97,13 +97,13 @@ fun ProductsOfCategoryList(
 @Composable
 fun ProductsOfCategoryActions(
     navController: NavController,
-    screenAction: ProductsOfCategoryListViewModel.ProductsOfCategoryScreenAction?
+    screenAction: ProductsOfCategoryViewModel.ProductsOfCategoryScreenAction?
 ) {
 
     LaunchedEffect(screenAction) {
         when (screenAction) {
             null -> Unit
-            is ProductsOfCategoryListViewModel.ProductsOfCategoryScreenAction.NavigateProductDetails -> navController.navigate(
+            is ProductsOfCategoryViewModel.ProductsOfCategoryScreenAction.NavigateProductDetails -> navController.navigate(
                 NestedScreen.ProductDetails.navigateFromProductsOfCategoryScreen(productId = screenAction.id)
             )
         }
