@@ -1,5 +1,9 @@
 package com.bekmnsrw.fakestore.feature.main.presentation.list
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -412,7 +416,11 @@ fun CircularProgressBar(
     shouldShow: Boolean
 ) {
 
-    if (shouldShow) {
+    AnimatedVisibility(
+        visible = shouldShow,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()

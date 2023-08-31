@@ -162,9 +162,13 @@ fun ProductsOfCategoryActions(
     LaunchedEffect(screenAction) {
         when (screenAction) {
             null -> Unit
+
             is ProductsOfCategoryViewModel.ProductsOfCategoryScreenAction.NavigateProductDetails -> navController.navigate(
-                NestedScreen.ProductDetails.navigateFromProductsOfCategoryScreen(productId = screenAction.id)
+                NestedScreen.ProductDetails.navigateFromProductsOfCategoryScreen(
+                    productId = screenAction.id
+                )
             )
+
             ProductsOfCategoryViewModel.ProductsOfCategoryScreenAction.NavigateBack -> navController.navigateUp()
         }
     }

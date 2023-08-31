@@ -637,6 +637,7 @@ fun DetailsActions(
     LaunchedEffect(screenAction) {
         when (screenAction) {
             null -> Unit
+
             DetailsViewModel.DetailsScreenAction.NavigateBack -> navController.navigateUp()
         }
     }

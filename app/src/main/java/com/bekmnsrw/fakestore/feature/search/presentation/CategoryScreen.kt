@@ -153,6 +153,7 @@ fun CategoryActions(
     LaunchedEffect(screenAction) {
         when (screenAction) {
             null -> Unit
+
             is CategoryViewModel.CategoryScreenAction.NavigateProductsOfCategoryList -> navController.navigate(
                 NestedScreen.ProductsOfCategory.navigateFromCategoryScreen(
                     category = screenAction.category

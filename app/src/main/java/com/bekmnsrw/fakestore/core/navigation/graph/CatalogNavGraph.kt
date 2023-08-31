@@ -1,5 +1,14 @@
 package com.bekmnsrw.fakestore.core.navigation.graph
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -21,7 +30,11 @@ fun NavGraphBuilder.catalogNavGraph(
         startDestination = CATALOG_SCREEN_ROUTE,
         route = NavigationGraph.CatalogGraph.route
     ) {
-        composable(route = CATALOG_SCREEN_ROUTE) {
+        composable(
+            route = CATALOG_SCREEN_ROUTE,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
             CategoryScreen(
                 navController = navController,
                 viewModel = viewModel(viewModelStoreOwner)
@@ -32,7 +45,37 @@ fun NavGraphBuilder.catalogNavGraph(
             ProductsOfCategoryScreen(navController = navController)
         }
 
-        composable(route = NestedScreen.ProductDetails.reusableRoute) {
+        composable(
+            route = NestedScreen.ProductDetails.reusableRoute,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = LinearEasing
+                    )
+                ) + slideIntoContainer(
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = EaseIn
+                    ),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = LinearEasing
+                    )
+                ) + slideOutOfContainer(
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = EaseOut
+                    ),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End
+                )
+            }
+        ) {
             DetailsScreen(navController = navController)
         }
     }
