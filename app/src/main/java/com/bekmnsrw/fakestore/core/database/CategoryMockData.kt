@@ -6,7 +6,7 @@ val CATEGORY_MOCK_DATA = mapOf(
     "fragrances" to Pair("Парфюмерия", "https://avatars.mds.yandex.net/get-mpic/5236304/img_id5514705596026165558.jpeg/orig"),
     "skincare" to Pair("Уход за кожей", "https://avatars.mds.yandex.net/get-mpic/5236304/img_id5514705596026165558.jpeg/orig"),
     "groceries" to Pair("Продукты", "https://avatars.mds.yandex.net/get-mpic/7981123/img_id257572429354721379.jpeg/orig"),
-    "home-decoration" to Pair("Предметы интерьера", "https://avatars.mds.yandex.net/get-mpic/5236304/img_id5514705596026165558.jpeg/orig"),
+    "home-decoration" to Pair("Интерьер", "https://avatars.mds.yandex.net/get-mpic/5236304/img_id5514705596026165558.jpeg/orig"),
     "furniture" to Pair("Мебель", "https://avatars.mds.yandex.net/get-mpic/7981123/img_id257572429354721379.jpeg/orig"),
     "tops" to Pair("Топы", "https://avatars.mds.yandex.net/get-mpic/5236304/img_id5514705596026165558.jpeg/orig"),
     "womens-dresses" to Pair("Платья", "https://avatars.mds.yandex.net/get-mpic/7981123/img_id257572429354721379.jpeg/orig"),

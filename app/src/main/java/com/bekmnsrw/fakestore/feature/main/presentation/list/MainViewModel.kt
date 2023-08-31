@@ -7,19 +7,25 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.bekmnsrw.fakestore.feature.main.data.ProductPagingSource
+import com.bekmnsrw.fakestore.feature.search.domain.usecase.GetAllCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val productPagingSource: ProductPagingSource
+    private val productPagingSource: ProductPagingSource,
+    private val getAllCategoriesUseCase: GetAllCategoriesUseCase
 ) : ViewModel() {
 
     val pagedProducts = Pager(PagingConfig(ProductPagingSource.PAGE_SIZE)) {
@@ -28,7 +34,7 @@ class MainViewModel @Inject constructor(
 
     @Immutable
     data class MainScreenState(
-        val isLoading: Boolean = false
+        val categories: List<String> = persistentListOf()
     )
 
     @Immutable
@@ -53,11 +59,27 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    init {
+        loadAllCategories()
+    }
+
     private fun onProductClicked(productId: Long) = viewModelScope.launch {
         _screenAction.emit(
             MainScreenAction.NavigateProductDetails(
                 id = productId
             )
         )
+    }
+
+    private fun loadAllCategories() = viewModelScope.launch {
+        getAllCategoriesUseCase()
+            .flowOn(Dispatchers.IO)
+            .collect {
+                _screenState.emit(
+                    _screenState.value.copy(
+                        categories = it.toPersistentList()
+                    )
+                )
+            }
     }
 }

@@ -116,5 +116,10 @@ fun typography(): CustomTypography = CustomTypography(
     categoryCard = TextStyle(
         fontSize = 14.sp,
         fontWeight = FontWeight.Bold
+    ),
+
+    categoryCardMainScreen = TextStyle(
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Normal
     )
 )

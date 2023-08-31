@@ -14,8 +14,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -37,9 +40,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.offset
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -51,6 +58,7 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.bekmnsrw.fakestore.core.database.CATEGORY_MOCK_DATA
 import com.bekmnsrw.fakestore.core.navigation.NestedScreen
 import com.bekmnsrw.fakestore.feature.main.domain.dto.ProductMain
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
@@ -67,7 +75,8 @@ fun MainScreen(
 
     MainContent(
         eventHandler = viewModel::eventHandler,
-        pagedProducts = pagedProducts
+        pagedProducts = pagedProducts,
+        screenState = screenState.value
     )
 
     MainActions(
@@ -79,12 +88,14 @@ fun MainScreen(
 @Composable
 fun MainContent(
     eventHandler: (MainViewModel.MainScreenEvent) -> Unit,
-    pagedProducts: LazyPagingItems<ProductMain>
+    pagedProducts: LazyPagingItems<ProductMain>,
+    screenState: MainViewModel.MainScreenState
 ) {
 
     ProductMainList(
         eventHandler = eventHandler,
-        pagedProducts = pagedProducts
+        pagedProducts = pagedProducts,
+        screenState = screenState
     )
 
     if (pagedProducts.loadState.refresh == LoadState.Loading) CircularProgressBar(shouldShow = true)
@@ -93,7 +104,8 @@ fun MainContent(
 @Composable
 fun ProductMainList(
     eventHandler: (MainViewModel.MainScreenEvent) -> Unit,
-    pagedProducts: LazyPagingItems<ProductMain>
+    pagedProducts: LazyPagingItems<ProductMain>,
+    screenState: MainViewModel.MainScreenState
 ) {
 
     LazyVerticalGrid(
@@ -105,6 +117,12 @@ fun ProductMainList(
             .fillMaxSize()
             .background(CustomTheme.colors.background)
     ) {
+
+        item(span = { GridItemSpan(2) }) {
+            CategoryList(
+                categories = screenState.categories
+            )
+        }
 
         items(
             count = pagedProducts.itemCount,
@@ -120,6 +138,95 @@ fun ProductMainList(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CategoryList(
+    categories: List<String>
+) {
+
+    val density = LocalDensity.current
+    val offsetPx = with (density) { 16.dp.roundToPx() }
+
+    LazyRow(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        modifier = Modifier
+            .layout { measurable, constraints ->
+                val looseConstraints = constraints.offset(offsetPx * 2, 0)
+                val placeable = measurable.measure(looseConstraints)
+                layout(placeable.width, placeable.height) { placeable.placeRelative(0, 0) }
+            }
+            .fillMaxWidth()
+    ) {
+
+        items(
+            items = categories,
+            key = { it }
+        ) {
+
+            CategoryListItem(
+                category = it,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CategoryListItem(
+    category: String,
+    onClick: (String) -> Unit
+) {
+
+    Card(
+        modifier = Modifier.size(
+            height = 96.dp,
+            width = 72.dp
+        ),
+        shape = RoundedCornerShape(16.dp),
+        onClick = { onClick(category) },
+        colors = CardDefaults.cardColors(
+            containerColor = CustomTheme.colors.background
+        )
+    ) {
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(data = CATEGORY_MOCK_DATA[category]?.second)
+                    .crossfade(enable = true)
+                    .diskCachePolicy(policy = CachePolicy.ENABLED)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(72.dp)
+                    .clip(RoundedCornerShape(16.dp))
+            )
+
+            Text(
+                text = CATEGORY_MOCK_DATA[category]?.first.toString(),
+                style = CustomTheme.typography.categoryCardMainScreen,
+                color = CustomTheme.colors.onBackground,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = 8.dp,
+                        vertical = 4.dp
+                    ),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -324,7 +431,7 @@ fun AddShoppingCartButton() {
             color = CustomTheme.colors.bottomAppBarItemUnselected
         ),
         contentPadding = PaddingValues(0.dp),
-        modifier= Modifier.size(40.dp)
+        modifier = Modifier.size(40.dp)
     ) {
 
         Icon(

@@ -363,9 +363,8 @@ fun ProductPriceDetails(
         Text(
             text = "$fullPrice $",
             color = CustomTheme.colors.cardSupportingText,
-            style = CustomTheme.typography.detailsFullPrice,
-
-            )
+            style = CustomTheme.typography.detailsFullPrice
+        )
     }
 }
 
@@ -501,7 +500,7 @@ fun Seller(
                         color = CustomTheme.colors.onBackground
                     )
 
-                    Row (
+                    Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
 
@@ -650,7 +649,7 @@ fun calculateNumberOfStars(rating: Double): Triple<Int, Int, Boolean> {
 
     if (numberAfterDot > 0.79) numberBeforeDot++
 
-    val hasHalfStar = when(numberAfterDot) {
+    val hasHalfStar = when (numberAfterDot) {
         in 0.40..0.79 -> true
         else -> false
     }
