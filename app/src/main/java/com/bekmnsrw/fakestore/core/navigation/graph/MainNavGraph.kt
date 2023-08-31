@@ -8,6 +8,7 @@ import com.bekmnsrw.fakestore.core.navigation.MAIN_SCREEN_ROUTE
 import com.bekmnsrw.fakestore.core.navigation.NestedScreen
 import com.bekmnsrw.fakestore.feature.main.presentation.details.DetailsScreen
 import com.bekmnsrw.fakestore.feature.main.presentation.list.MainScreen
+import com.bekmnsrw.fakestore.feature.search.presentation.ProductsOfCategoryScreen
 
 fun NavGraphBuilder.mainNavGraph(navController: NavController) {
 
@@ -21,6 +22,10 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
 
         composable(route = NestedScreen.ProductDetails.route) {
             DetailsScreen(navController = navController)
+        }
+
+        composable(route = NestedScreen.ProductsOfCategory.reusableRoute) {
+            ProductsOfCategoryScreen(navController = navController)
         }
     }
 }

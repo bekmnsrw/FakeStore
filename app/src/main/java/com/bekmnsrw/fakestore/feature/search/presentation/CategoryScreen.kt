@@ -154,7 +154,7 @@ fun CategoryActions(
         when (screenAction) {
             null -> Unit
             is CategoryViewModel.CategoryScreenAction.NavigateProductsOfCategoryList -> navController.navigate(
-                NestedScreen.ProductsOfCategoryList.createRoute(
+                NestedScreen.ProductsOfCategory.navigateFromCategoryScreen(
                     category = screenAction.category
                 )
             )

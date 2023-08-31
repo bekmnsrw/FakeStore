@@ -28,7 +28,7 @@ fun NavGraphBuilder.catalogNavGraph(
             )
         }
 
-        composable(route = NestedScreen.ProductsOfCategoryList.route) {
+        composable(route = NestedScreen.ProductsOfCategory.route) {
             ProductsOfCategoryScreen(navController = navController)
         }
 

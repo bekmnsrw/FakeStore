@@ -121,7 +121,11 @@ fun ProductMainList(
         item(span = { GridItemSpan(2) }) {
             CategoryList(
                 categories = screenState.categories
-            )
+            ) {
+                eventHandler(
+                    MainViewModel.MainScreenEvent.OnCategoryClicked(it)
+                )
+            }
         }
 
         items(
@@ -144,7 +148,8 @@ fun ProductMainList(
 
 @Composable
 fun CategoryList(
-    categories: List<String>
+    categories: List<String>,
+    onClick: (String) -> Unit
 ) {
 
     val density = LocalDensity.current
@@ -170,7 +175,7 @@ fun CategoryList(
 
             CategoryListItem(
                 category = it,
-                onClick = {}
+                onClick = { category -> onClick(category) }
             )
         }
     }
@@ -451,9 +456,16 @@ fun MainActions(
     LaunchedEffect(screenAction) {
         when (screenAction) {
             null -> Unit
+
             is MainViewModel.MainScreenAction.NavigateProductDetails -> navController.navigate(
                 NestedScreen.ProductDetails.navigateFromMainScreen(
                     productId = screenAction.id
+                )
+            )
+
+            is MainViewModel.MainScreenAction.NavigateProductsOfCategoryList -> navController.navigate(
+                NestedScreen.ProductsOfCategory.navigateFromMainScreen(
+                    category = screenAction.category
                 )
             )
         }

@@ -40,11 +40,13 @@ class MainViewModel @Inject constructor(
     @Immutable
     sealed interface MainScreenEvent {
         data class OnProductClicked(val id: Long) : MainScreenEvent
+        data class OnCategoryClicked(val category: String) : MainScreenEvent
     }
 
     @Immutable
     sealed interface MainScreenAction {
         data class NavigateProductDetails(val id: Long) : MainScreenAction
+        data class NavigateProductsOfCategoryList(val category: String) : MainScreenAction
     }
 
     private val _screenState = MutableStateFlow(MainScreenState())
@@ -56,6 +58,7 @@ class MainViewModel @Inject constructor(
     fun eventHandler(event: MainScreenEvent) {
         when (event) {
             is MainScreenEvent.OnProductClicked -> onProductClicked(event.id)
+            is MainScreenEvent.OnCategoryClicked -> onCategoryClicked(event.category)
         }
     }
 
@@ -81,5 +84,13 @@ class MainViewModel @Inject constructor(
                     )
                 )
             }
+    }
+
+    private fun onCategoryClicked(category: String) = viewModelScope.launch {
+        _screenAction.emit(
+            MainScreenAction.NavigateProductsOfCategoryList(
+                category = category
+            )
+        )
     }
 }

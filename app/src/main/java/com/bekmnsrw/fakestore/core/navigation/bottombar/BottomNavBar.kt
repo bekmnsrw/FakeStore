@@ -5,11 +5,11 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.bekmnsrw.fakestore.core.navigation.graph.NavigationGraph
 import com.bekmnsrw.fakestore.ui.theme.CustomTheme
 
 @Composable
@@ -22,30 +22,11 @@ fun BottomNavBar(
         backgroundColor = CustomTheme.colors.bottomAppBarBackground
     ) {
 
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
+        val startDestination = BottomAppBarItem.Main
+        var selectedTab by remember { mutableIntStateOf(bottomAppBarItems.indexOf(startDestination)) }
 
-        val navigationGraphsRoutes = listOf(
-            NavigationGraph.MainGraph.route,
-            NavigationGraph.CatalogGraph.route,
-            NavigationGraph.CartGraph.route,
-            NavigationGraph.FavoritesGraph.route,
-            NavigationGraph.ProfileGraph.route
-        )
-
-        val currentGraphRoute = currentDestination?.hierarchy?.firstOrNull {
-            it.parent?.route in navigationGraphsRoutes
-        }?.parent?.route
-
-        bottomAppBarItems.forEach { item ->
-            val isSelected = when {
-                item.route == BottomAppBarItem.Main.route && currentGraphRoute == NavigationGraph.MainGraph.route -> true
-                item.route == BottomAppBarItem.Catalog.route && currentGraphRoute == NavigationGraph.CatalogGraph.route -> true
-                item.route == BottomAppBarItem.Cart.route && currentGraphRoute == NavigationGraph.CartGraph.route -> true
-                item.route == BottomAppBarItem.Favorites.route && currentGraphRoute == NavigationGraph.FavoritesGraph.route -> true
-                item.route == BottomAppBarItem.Profile.route && currentGraphRoute == NavigationGraph.ProfileGraph.route -> true
-                else -> false
-            }
+        bottomAppBarItems.forEachIndexed { index, item ->
+            val isSelected = index == selectedTab
 
             BottomNavigationItem(
                 selected = isSelected,
@@ -57,6 +38,7 @@ fun BottomNavBar(
                         launchSingleTop = true
                         restoreState = true
                     }
+                    selectedTab = index
                 },
                 icon = {
                     Icon(
