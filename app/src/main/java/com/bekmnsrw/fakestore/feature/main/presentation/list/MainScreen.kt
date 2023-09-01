@@ -1,7 +1,7 @@
 package com.bekmnsrw.fakestore.feature.main.presentation.list
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,15 +29,23 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.rounded.AddShoppingCart
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,6 +57,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -62,6 +73,7 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.bekmnsrw.fakestore.R
 import com.bekmnsrw.fakestore.core.database.CATEGORY_MOCK_DATA
 import com.bekmnsrw.fakestore.core.navigation.NestedScreen
 import com.bekmnsrw.fakestore.feature.main.domain.dto.ProductMain
@@ -77,10 +89,13 @@ fun MainScreen(
     val screenAction by viewModel.screenAction.collectAsStateWithLifecycle(initialValue = null)
     val pagedProducts = viewModel.pagedProducts.collectAsLazyPagingItems()
 
+    val searchInput by viewModel.searchInput.collectAsStateWithLifecycle()
+
     MainContent(
         eventHandler = viewModel::eventHandler,
         pagedProducts = pagedProducts,
-        screenState = screenState.value
+        screenState = screenState.value,
+        searchInput = searchInput
     )
 
     MainActions(
@@ -93,23 +108,198 @@ fun MainScreen(
 fun MainContent(
     eventHandler: (MainViewModel.MainScreenEvent) -> Unit,
     pagedProducts: LazyPagingItems<ProductMain>,
-    screenState: MainViewModel.MainScreenState
+    screenState: MainViewModel.MainScreenState,
+    searchInput: String
 ) {
 
-    ProductMainList(
-        eventHandler = eventHandler,
-        pagedProducts = pagedProducts,
-        screenState = screenState
-    )
+    Scaffold(
+        topBar = {
+            MainScreenTopBar(
+                eventHandler = eventHandler,
+                searchInput = searchInput,
+                isSearchBarActive = screenState.isSearchBarActive
+            )
+        }
+    ) { contentPadding ->
 
-    if (pagedProducts.loadState.refresh == LoadState.Loading) CircularProgressBar(shouldShow = true)
+        ProductMainList(
+            eventHandler = eventHandler,
+            pagedProducts = pagedProducts,
+            screenState = screenState,
+            contentPadding = contentPadding
+        )
+
+        if (pagedProducts.loadState.refresh == LoadState.Loading) CircularProgressBar(shouldShow = true)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainScreenTopBar(
+    eventHandler: (MainViewModel.MainScreenEvent) -> Unit,
+    searchInput: String,
+    isSearchBarActive: Boolean
+) {
+
+    Column {
+
+        if (!isSearchBarActive) {
+            Text(
+                text = "Казань, 5",
+                style = CustomTheme.typography.categoryCard,
+                color = CustomTheme.colors.onBackground,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 12.dp
+                    )
+            )
+        }
+
+        SearchBar(
+            query = searchInput,
+            onQueryChange = {
+                eventHandler(
+                    MainViewModel.MainScreenEvent.OnQueryChange(
+                        query = it
+                    )
+                )
+            },
+            onSearch = {
+                if (it.isNotEmpty()) {
+                    eventHandler(
+                        MainViewModel.MainScreenEvent.OnSearchClicked(
+                            query = it
+                        )
+                    )
+                }
+                eventHandler(
+                    MainViewModel.MainScreenEvent.OnActiveChanged(
+                        isActive = false
+                    )
+                )
+            },
+            active = isSearchBarActive,
+            onActiveChange = {
+                eventHandler(
+                    MainViewModel.MainScreenEvent.OnActiveChanged(
+                        isActive = it
+                    )
+                )
+            },
+            leadingIcon = {
+                if (isSearchBarActive) {
+                    IconButton(
+                        onClick = {
+                            eventHandler(
+                                MainViewModel.MainScreenEvent.OnActiveChanged(
+                                    isActive = false
+                                )
+                            )
+                        }
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                }
+            },
+            trailingIcon = {
+                if (!isSearchBarActive) {
+                    IconButton(
+                        onClick = {
+                            if (searchInput.isNotEmpty()) {
+                                eventHandler(
+                                    MainViewModel.MainScreenEvent.OnSearchClicked(
+                                        query = searchInput
+                                    )
+                                )
+                            }
+                            eventHandler(
+                                MainViewModel.MainScreenEvent.OnActiveChanged(
+                                    isActive = !isSearchBarActive
+                                )
+                            )
+                        }
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Outlined.Search,
+                            contentDescription = null,
+                        )
+                    }
+                } else {
+                    if (searchInput.isNotEmpty()) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+
+                            IconButton(
+                                onClick = {
+                                    eventHandler(
+                                        MainViewModel.MainScreenEvent.OnClearInputClicked
+                                    )
+                                }
+                            ) {
+
+                                Icon(
+                                    imageVector = Icons.Rounded.Close,
+                                    contentDescription = null
+                                )
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    eventHandler(
+                                        MainViewModel.MainScreenEvent.OnActiveChanged(
+                                            isActive = false
+                                        )
+                                    )
+                                    // TODO: navigate on SearchResultScreen
+                                }
+                            ) {
+
+                                Icon(
+                                    imageVector = Icons.Rounded.Search,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            placeholder = {
+                Text(
+                    text = stringResource(id = R.string.search_title),
+                    modifier = Modifier.offset(
+                        x = if (isSearchBarActive) 0.dp else (-36).dp
+                    )
+                )
+            },
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = if (isSearchBarActive) 0.dp else 16.dp,
+                    end = if (isSearchBarActive) 0.dp else 16.dp,
+                    top = if (isSearchBarActive) 0.dp else 8.dp,
+                    bottom = if (isSearchBarActive) 0.dp else 16.dp
+                )
+        ) {}
+    }
 }
 
 @Composable
 fun ProductMainList(
     eventHandler: (MainViewModel.MainScreenEvent) -> Unit,
     pagedProducts: LazyPagingItems<ProductMain>,
-    screenState: MainViewModel.MainScreenState
+    screenState: MainViewModel.MainScreenState,
+    contentPadding: PaddingValues
 ) {
 
     LazyVerticalGrid(
@@ -120,6 +310,7 @@ fun ProductMainList(
         modifier = Modifier
             .fillMaxSize()
             .background(CustomTheme.colors.background)
+            .padding(contentPadding)
     ) {
 
         item(span = { GridItemSpan(2) }) {
@@ -157,7 +348,7 @@ fun CategoryList(
 ) {
 
     val density = LocalDensity.current
-    val offsetPx = with (density) { 16.dp.roundToPx() }
+    val offsetPx = with(density) { 16.dp.roundToPx() }
 
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,

@@ -13,4 +13,7 @@
     <string name="category_title">Категория</string>
     <string name="seller_title">Продавец</string>
     <string name="description_title">Описание</string>
+
+    <!--  Main Screen  -->
+    <string name="search_title">Найти товары</string>
 </resources>
