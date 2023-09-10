@@ -54,8 +54,8 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
@@ -73,8 +73,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // Region Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.1")
-    implementation("androidx.compose.material:material:1.5.0") // Includes BottomNavigation
+    implementation("androidx.navigation:navigation-compose:2.7.2")
+    implementation("androidx.compose.material:material:1.5.1") // Includes BottomNavigation
     // End Region
 
     // Region OkHttp
@@ -103,14 +103,14 @@ dependencies {
     // End Region
 
     // Region Some Extensions
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
     implementation("io.coil-kt:coil-compose:2.3.0")
-    implementation("androidx.compose.material:material-icons-extended:1.5.0")
+    implementation("androidx.compose.material:material-icons-extended:1.5.1")
     // End Region
 
     // Region Paging
-    val pagingVersion = "3.2.0"
+    val pagingVersion = "3.2.1"
     implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
     implementation("androidx.paging:paging-compose:$pagingVersion")
     // End Region
@@ -127,5 +127,9 @@ dependencies {
 
     // Region DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    // End Region
+
+    // Region WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
     // End Region
 }
