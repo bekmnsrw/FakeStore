@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -117,7 +118,10 @@ fun MainContent(
             MainScreenTopBar(
                 eventHandler = eventHandler,
                 searchInput = searchInput,
-                isSearchBarActive = screenState.isSearchBarActive
+                isSearchBarActive = screenState.isSearchBarActive,
+                onDeliveryAddressClicked = {
+                    eventHandler(MainViewModel.MainScreenEvent.OnDeliveryAddressClicked)
+                }
             )
         }
     ) { contentPadding ->
@@ -138,23 +142,28 @@ fun MainContent(
 fun MainScreenTopBar(
     eventHandler: (MainViewModel.MainScreenEvent) -> Unit,
     searchInput: String,
-    isSearchBarActive: Boolean
+    isSearchBarActive: Boolean,
+    onDeliveryAddressClicked: () -> Unit
 ) {
 
     Column {
 
         if (!isSearchBarActive) {
             Text(
-                text = "Казань, 5",
+                text = "Деревня Универсиады, 5",
                 style = CustomTheme.typography.categoryCard,
                 color = CustomTheme.colors.onBackground,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .wrapContentSize()
                     .padding(
-                        start = 16.dp,
-                        end = 16.dp,
+                        start = 12.dp,
+                        end = 12.dp,
                         top = 12.dp
                     )
+                    .background(CustomTheme.colors.background)
+                    .clip(RoundedCornerShape(4.dp))
+                    .clickable { onDeliveryAddressClicked() }
+                    .padding(4.dp)
             )
         }
 
@@ -287,7 +296,7 @@ fun MainScreenTopBar(
                 .padding(
                     start = if (isSearchBarActive) 0.dp else 16.dp,
                     end = if (isSearchBarActive) 0.dp else 16.dp,
-                    top = if (isSearchBarActive) 0.dp else 8.dp,
+                    top = if (isSearchBarActive) 0.dp else 4.dp,
                     bottom = if (isSearchBarActive) 0.dp else 16.dp
                 )
         ) {}
